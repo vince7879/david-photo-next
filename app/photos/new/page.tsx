@@ -1,9 +1,10 @@
 "use client";
 
-import { Button, Select, TextField } from "@radix-ui/themes";
+import { Button, Callout, Select, TextField } from "@radix-ui/themes";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface PhotoForm {
   place: string;
@@ -42,53 +43,65 @@ const NewPhotoPage = () => {
   ];
 
   const { register, control, handleSubmit } = useForm<PhotoForm>();
-  const router = useRouter()
+  const router = useRouter();
+  const [error, setError] = useState("");
 
   return (
-    <form
-      className="max-w-xl space-y-3"
-      onSubmit={handleSubmit(async (data) => {
-        await axios.post("/api/photos", data);
-        router.push('/photos')
-      })}
-    >
-      <TextField.Root placeholder="Place" {...register("place")} />
-      {/* rework spacing between selects and submit btn */}
-      <Controller
-        name="month"
-        control={control}
-        render={({ field }) => (
-          <Select.Root {...field} onValueChange={field.onChange}>
-            <Select.Trigger placeholder="Month" />
-            <Select.Content position="popper">
-              {months.map((month) => (
-                <Select.Item key={month} value={month}>
-                  {month}
-                </Select.Item>
-              ))}
-            </Select.Content>
-          </Select.Root>
-        )}
-      />
+    <div className="max-w-xl">
+      {error && (
+        <Callout.Root color="red" className="mb-5">
+          <Callout.Text>{error}</Callout.Text>
+        </Callout.Root>
+      )}
+      <form
+        className="max-w-xl space-y-3"
+        onSubmit={handleSubmit(async (data) => {
+          try {
+            await axios.post("/api/photos", data);
+            router.push("/photos");
+          } catch (error) {
+            setError("An unexpected error occured.");
+          }
+        })}
+      >
+        <TextField.Root placeholder="Place" {...register("place")} />
+        {/* rework spacing between selects and submit btn */}
+        <Controller
+          name="month"
+          control={control}
+          render={({ field }) => (
+            <Select.Root {...field} onValueChange={field.onChange}>
+              <Select.Trigger placeholder="Month" />
+              <Select.Content position="popper">
+                {months.map((month) => (
+                  <Select.Item key={month} value={month}>
+                    {month}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Root>
+          )}
+        />
 
-      <Controller
-        name="color"
-        control={control}
-        render={({ field }) => (
-          <Select.Root {...field} onValueChange={field.onChange}>
-            <Select.Trigger placeholder="Color" />
-            <Select.Content position="popper">
-              {colors.map((color) => (
-                <Select.Item key={color} value={color}>
-                  {color}
-                </Select.Item>
-              ))}
-            </Select.Content>
-          </Select.Root>
-        )}
-      />
-      <Button className="my-3">Submit New Photo</Button>
-    </form>
+        <Controller
+          name="color"
+          control={control}
+          render={({ field }) => (
+            <Select.Root {...field} onValueChange={field.onChange}>
+              <Select.Trigger placeholder="Color" />
+              <Select.Content position="popper">
+                {colors.map((color) => (
+                  <Select.Item key={color} value={color}>
+                    {color}
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Root>
+          )}
+        />
+        <Button className="my-3">Submit New Photo</Button>
+      </form>
+    </div>
   );
 };
 

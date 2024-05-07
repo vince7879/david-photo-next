@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     const validation = createPhotoSchema.safeParse(body)
 
     if(!validation.success) 
-        return NextResponse.json(validation.error.errors, { status: 400 })
+        return NextResponse.json(validation.error.format(), { status: 400 })
 
     const newPhoto = await prisma.photo.create({
         data: { place: body.place, month: body.month, color: body.color }
