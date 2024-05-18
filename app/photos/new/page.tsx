@@ -8,6 +8,7 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createPhotoSchema } from "@/app/validationSchemas";
 import { z } from "zod";
+import ErrorMessage from "@/app/components/ErrorMessage";
 
 type PhotoForm = z.infer<typeof createPhotoSchema>;
 
@@ -71,11 +72,7 @@ const NewPhotoPage = () => {
         })}
       >
         <TextField.Root placeholder="Place" {...register("place")} />
-        {errors.place && (
-          <Text color="red" as="p">
-            {errors.place.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.place?.message}</ErrorMessage>
         {/* rework spacing between selects and submit btn */}
         <div>
           <Controller
@@ -94,7 +91,7 @@ const NewPhotoPage = () => {
               </Select.Root>
             )}
           />
-          {errors.month && <Text color="red">{errors.month.message}</Text>}
+          <ErrorMessage>{errors.month?.message}</ErrorMessage>
         </div>
         <div>
           <Controller
@@ -113,7 +110,7 @@ const NewPhotoPage = () => {
               </Select.Root>
             )}
           />
-          {errors.color && <Text color="red">{errors.color.message}</Text>}
+          <ErrorMessage>{errors.color?.message}</ErrorMessage>
         </div>
         <Button className="my-3">Submit New Photo</Button>
       </form>
