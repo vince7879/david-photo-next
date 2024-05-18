@@ -1,12 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from 'zod'
 import prisma from "@/prisma/client";
-
-const createPhotoSchema = z.object({
-    place: z.string().min(1).max(191),
-    month: z.string().min(1).max(191),
-    color: z.string().min(1).max(191)
-})
+import { createPhotoSchema } from "../../validationSchemas";
 
 export async function POST(request: NextRequest) {
     const body = await request.json()

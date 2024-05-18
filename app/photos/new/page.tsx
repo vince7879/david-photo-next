@@ -1,16 +1,15 @@
 "use client";
 
-import { Button, Callout, Select, TextField } from "@radix-ui/themes";
+import { Button, Callout, Select, Text, TextField } from "@radix-ui/themes";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createPhotoSchema } from "@/app/validationSchemas";
+import { z } from "zod";
 
-interface PhotoForm {
-  place: string;
-  month: string;
-  color: string;
-}
+type PhotoForm = z.infer<typeof createPhotoSchema>;
 
 const NewPhotoPage = () => {
   // to move to a global constant file
@@ -42,7 +41,14 @@ const NewPhotoPage = () => {
     "black-white",
   ];
 
-  const { register, control, handleSubmit } = useForm<PhotoForm>();
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<PhotoForm>({
+    resolver: zodResolver(createPhotoSchema),
+  });
   const router = useRouter();
   const [error, setError] = useState("");
 
@@ -65,40 +71,50 @@ const NewPhotoPage = () => {
         })}
       >
         <TextField.Root placeholder="Place" {...register("place")} />
+        {errors.place && (
+          <Text color="red" as="p">
+            {errors.place.message}
+          </Text>
+        )}
         {/* rework spacing between selects and submit btn */}
-        <Controller
-          name="month"
-          control={control}
-          render={({ field }) => (
-            <Select.Root {...field} onValueChange={field.onChange}>
-              <Select.Trigger placeholder="Month" />
-              <Select.Content position="popper">
-                {months.map((month) => (
-                  <Select.Item key={month} value={month}>
-                    {month}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select.Root>
-          )}
-        />
-
-        <Controller
-          name="color"
-          control={control}
-          render={({ field }) => (
-            <Select.Root {...field} onValueChange={field.onChange}>
-              <Select.Trigger placeholder="Color" />
-              <Select.Content position="popper">
-                {colors.map((color) => (
-                  <Select.Item key={color} value={color}>
-                    {color}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select.Root>
-          )}
-        />
+        <div>
+          <Controller
+            name="month"
+            control={control}
+            render={({ field }) => (
+              <Select.Root {...field} onValueChange={field.onChange}>
+                <Select.Trigger placeholder="Month" />
+                <Select.Content position="popper">
+                  {months.map((month) => (
+                    <Select.Item key={month} value={month}>
+                      {month}
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Root>
+            )}
+          />
+          {errors.month && <Text color="red">{errors.month.message}</Text>}
+        </div>
+        <div>
+          <Controller
+            name="color"
+            control={control}
+            render={({ field }) => (
+              <Select.Root {...field} onValueChange={field.onChange}>
+                <Select.Trigger placeholder="Color" />
+                <Select.Content position="popper">
+                  {colors.map((color) => (
+                    <Select.Item key={color} value={color}>
+                      {color}
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Root>
+            )}
+          />
+          {errors.color && <Text color="red">{errors.color.message}</Text>}
+        </div>
         <Button className="my-3">Submit New Photo</Button>
       </form>
     </div>
