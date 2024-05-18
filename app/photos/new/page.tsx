@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createPhotoSchema } from "@/app/validationSchemas";
 import { z } from "zod";
 import ErrorMessage from "@/app/components/ErrorMessage";
+import Spinner from "@/app/components/Spinner";
 
 type PhotoForm = z.infer<typeof createPhotoSchema>;
 
@@ -52,6 +53,7 @@ const NewPhotoPage = () => {
   });
   const router = useRouter();
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
     <div className="max-w-xl">
@@ -64,9 +66,11 @@ const NewPhotoPage = () => {
         className="max-w-xl space-y-3"
         onSubmit={handleSubmit(async (data) => {
           try {
+            setIsSubmitting(true);
             await axios.post("/api/photos", data);
             router.push("/photos");
           } catch (error) {
+            setIsSubmitting(false);
             setError("An unexpected error occured.");
           }
         })}
@@ -112,7 +116,9 @@ const NewPhotoPage = () => {
           />
           <ErrorMessage>{errors.color?.message}</ErrorMessage>
         </div>
-        <Button className="my-3">Submit New Photo</Button>
+        <Button disabled={isSubmitting} className="my-3">
+          Submit New Photo {isSubmitting && <Spinner />}
+        </Button>
       </form>
     </div>
   );
