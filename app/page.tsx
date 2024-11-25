@@ -50,8 +50,8 @@ const Home: React.FC = () => {
       <ColorShape variant="first-vertical-rectangle" color={COLORS.WHITE} />
       {/* long purple */}
       <ColorShape variant="second-vertical-rectangle" color={COLORS.PURPLE} />
-      {/* black and white square */}
-      <ColorShape variant="bottom-small-square" color={COLORS.BLACK_WHITE} />
+      {/* purple square */}
+      <ColorShape variant="bottom-small-square" color={COLORS.PURPLE} />
       {/* center black */}
       <ColorShape variant="first-horizontal-rectangle" color={COLORS.BLACK} />
       {/* center green */}
@@ -75,8 +75,9 @@ const Home: React.FC = () => {
       <ColorShape variant="big-horizontal-rectangle" color={COLORS.BLUE} />
       {/* bottom grey */}
       <ColorShape variant="tiny-horizontal-rectangle" color={COLORS.GREY} />
-      {/* bottom white */}
-      <ColorShape variant="bottom-rectangle" color={COLORS.WHITE} />
+      {/* bottom black & white */}
+      <ColorShape variant="bottom-rectangle" color={COLORS.BLACK_WHITE} />
+
       <div className={classNames(homeStyles.shape, homeStyles.copyright)}>
         <span>&copy; 2010 DAVID PREAT</span>
         <span>Tous droits réservés</span>
@@ -84,8 +85,8 @@ const Home: React.FC = () => {
 
       {/* right white */}
       <ColorShape variant="right-side-top" color={COLORS.WHITE} />
-      {/* right red */}
-      <ColorShape variant="right-side-bottom" color={COLORS.RED} />
+      {/* right orange */}
+      <ColorShape variant="right-side-bottom" color={COLORS.ORANGE} />
     </div>
   );
 };

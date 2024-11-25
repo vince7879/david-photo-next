@@ -54,21 +54,17 @@
   }
 
   &--black-white {
-    background: repeating-linear-gradient(
-    45deg,
+    background: linear-gradient(
+    /* hatched version*/
+    /*45deg,
     #000000,
-    /* #000000 16.66%,
-    #ebebeb 16.66%,
-    #ebebeb 33.33% */
-    /* #000000 1.5%,
-    #ebebeb 2%,
-    #ebebeb 3% */
-    /* #000000 1.5%,
-    #ebebeb 2.5%,
-    #ebebeb 3.5% */
     #000000 2%,
     #ebebeb 2%,
-    #ebebeb 3.5%
+    #ebebeb 3.5% */
+
+    to top right, /* diagonal from top/left to bottom/right */
+    #fff 50%,   /* white color bottom/left */
+    #000 50%    /* black color top/right */
     );
 
     &:hover {
