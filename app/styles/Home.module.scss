@@ -1,0 +1,50 @@
+.shape {
+  position: absolute;
+  box-sizing: border-box;
+  border: solid 5px black;
+}
+
+.topWhiteRecent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--white);
+  height: 10%;
+  width: 23%;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--recent);
+  }
+  > span {
+    color: var(--black);
+    font-size: 2rem;
+    font-weight: bold;
+  }
+}
+
+.signature {
+  background-color: var(--white);
+  top: 62%;
+  left: 62%;
+  height: 13%;
+  width: 30%;
+  cursor: pointer;
+  justify-items: center;
+  align-content: center;
+}
+
+.copyright {
+  color: var(--black);
+
+  display: flex;
+  justify-content: space-between;
+  padding: 0 3px;
+  background-color: var(--white);
+  bottom: 0;
+  left: 36%;
+  width: 56%;
+  height: 4%;
+  font-size: 0.7rem;
+  align-items: center;
+}

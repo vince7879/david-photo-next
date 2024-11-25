@@ -6,6 +6,19 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+
+  /* colors */
+  --black: #000;
+  --white: #EBEBEB;
+  --brown: #3E1D0C;
+  --yellow: #E5C55E;
+  --red: #DC0A0B;
+  --purple: #A3307D;
+  --green: #267C3F;
+  --blue: #0E104D;
+  --grey: #6F787D;
+  --recent: #FF7F50;
+  --orange: #E67B22;
 }
 
 @media (prefers-color-scheme: dark) {

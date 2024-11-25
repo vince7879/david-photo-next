@@ -1,0 +1,196 @@
+.shape {
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+
+  &--black {
+    background-color: var(--black);
+
+    &:hover {
+      background-color: #272727;
+    }
+  }
+
+  &--white {
+    background-color: var(--white);
+  }
+
+  &--brown {
+    background-color: var(--brown);
+
+    &:hover {
+      filter: brightness(1.2);
+    }
+  }
+
+  &--yellow {
+    background-color: var(--yellow);
+  }
+
+  &--red {
+    background-color: var(--red);
+  }
+
+  &--purple {
+    background-color: var(--purple);
+  }
+
+  &--green {
+    background-color: var(--green);
+  }
+
+  &--blue {
+    background-color: var(--blue);
+
+    &:hover {
+      filter: brightness(1.3);
+    }
+  }
+
+  &--grey {
+    background-color: var(--grey);
+  }
+
+  &--black-white {
+    background: repeating-linear-gradient(
+    45deg,
+    #000000,
+    /* #000000 16.66%,
+    #ebebeb 16.66%,
+    #ebebeb 33.33% */
+    /* #000000 1.5%,
+    #ebebeb 2%,
+    #ebebeb 3% */
+    /* #000000 1.5%,
+    #ebebeb 2.5%,
+    #ebebeb 3.5% */
+    #000000 2%,
+    #ebebeb 2%,
+    #ebebeb 3.5%
+    );
+
+    &:hover {
+      filter: brightness(0.8);
+    }
+  }
+
+  &--orange {
+    background-color: var(--orange);
+  }
+
+  &--top-middle {
+    left: 23%;
+    height: 10%;
+    width: 39%;
+  }
+
+  &--top-right {
+    left: 62%;
+    height: 10%;
+    width: 30%;
+  }
+
+  &--left-side-top {
+    top: 10%;
+    height: 26%;
+    width: 10%;
+  }
+
+  &--left-side-middle {
+    top: 36%;
+    height: 39%;
+    width: 10%;
+  }
+
+  &--left-side-bottom {
+    top: 75%;
+    height: 25%;
+    width: 10%;
+  }
+
+  &--big-square {
+    top: 10%;
+    left: 10%;
+    height: 52%;
+    width: 52%;
+  }
+
+  &--top-small-square {
+    top: 10%;
+    left: 62%;
+    height: 26%;
+    width: 30%;
+  }
+  
+  &--first-vertical-rectangle {
+    top: 36%;
+    left: 62%;
+    height: 26%;
+    width: 15%;
+  }
+  
+  &--second-vertical-rectangle {
+    top: 36%;
+    left: 77%;
+    height: 26%;
+    width: 15%;
+  }
+  
+  &--bottom-small-square {
+    top: 62%;
+    left: 10%;
+    height: 26%;
+    width: 26%;
+  }
+  
+  &--first-horizontal-rectangle {
+    top: 62%;
+    left: 36%;
+    height: 13%;
+    width: 26%;
+  }
+
+  &--third-horizontal-rectangle {
+    top: 75%;
+    left: 36%;
+    height: 13%;
+    width: 26%;
+  }
+
+  &--big-horizontal-rectangle {
+    top: 75%;
+    left: 62%;
+    height: 21%;
+    width: 30%;
+  }
+
+  &--tiny-horizontal-rectangle {
+    top: 88%;
+    left: 36%;
+    height: 8%;
+    width: 26%;
+  }
+
+  &--bottom-rectangle {
+    bottom: 0%;
+    left: 10%;
+    height: 12%;
+    width: 26%;
+  }
+
+  &--right-side-top {
+    right: 0%;
+    top: 0%;
+    height: 75%;
+    width: 8%;
+  }
+
+  &--right-side-bottom {
+    right: 0%;
+    bottom: 0%;
+    height: 25%;
+    width: 8%;
+  }
+}

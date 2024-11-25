@@ -1,0 +1,12 @@
+.frame {
+  position: relative;
+  width: 700px;
+  height: 700px;
+  border: solid 2px var(--white);
+  margin-left: 230px;
+  margin-top: 100px;
+
+  @media (max-width: 1024px) {
+    margin: 100px auto;
+  }
+}
