@@ -133,6 +133,8 @@ const NewPhotoPage = () => {
       
       reset();
       setPhotoPreview(null)
+      // change color alert when it's a success
+      // + remove the message as soon as an input is touch
       setError("photo added successfully !");
     } catch (error) {
       setError("An unexpected error occured.");
