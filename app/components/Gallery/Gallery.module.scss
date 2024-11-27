@@ -1,0 +1,12 @@
+.thumbnailsFrame {
+  --inner-length: 500px;
+
+  width: var(--inner-length);
+  height: var(--inner-length);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 2px solid var(--white);
+  margin: calc(var(--inner-length) / -2) 0 0 calc(var(--inner-length) / -2);
+  background-color: var(--black);
+}
