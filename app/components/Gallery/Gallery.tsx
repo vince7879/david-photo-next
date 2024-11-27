@@ -1,34 +1,53 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import layoutStyles from "@/app/styles/Layout.module.scss";
 import galleryStyles from "./Gallery.module.scss";
-import prisma from "@/prisma/client";
 import Image from "next/image";
 import { Grid } from "@radix-ui/themes";
 
 interface GalleryProps {
   color: any;
+  photos: any;
 }
 
-const Gallery: React.FC<GalleryProps> = async ({ color }) => {
-  const photos = await prisma.photo.findMany({ where: { color } });
+const Gallery: React.FC<GalleryProps> = ({ color, photos }) => {
+  const [page, setPage] = useState<1 | 2>(2);
+
+  const handlePagination = () => {
+    page === 2 ? setPage(1) : setPage(2);
+  };
 
   return (
     <div
       className={layoutStyles.frame}
       style={{ backgroundColor: `var(--${color})` }}
     >
-      {/* add page number for pagination / absolute on top-right could work */}
-      {/* handle 16 thumbnails to display */}
+      {photos.length > 16 && (
+        <div
+          className={galleryStyles.paginationNumber}
+          onClick={handlePagination}
+        >
+          {page}
+        </div>
+      )}
       <Grid columns="4" className={galleryStyles.thumbnailsFrame}>
-        {photos.slice(0, 16).map((photo, id) => (
-          <Image
-            key={id}
-            src={photo.photoUrl}
-            alt={photo.place}
-            width={200}
-            height={200}
-          />
-        ))}
+        {photos
+          .slice(page === 2 ? 0 : 16, page === 2 ? 16 : undefined)
+          .map(
+            (
+              photo: { photoUrl: string; place: string },
+              id: React.Key | null | undefined
+            ) => (
+              <Image
+                key={id}
+                src={photo.photoUrl}
+                alt={photo.place}
+                width={200}
+                height={200}
+              />
+            )
+          )}
       </Grid>
     </div>
   );
