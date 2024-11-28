@@ -1,17 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import layoutStyles from "@/app/styles/Layout.module.scss";
 import galleryStyles from "./Gallery.module.scss";
 import Image from "next/image";
 import { Grid } from "@radix-ui/themes";
 
 interface GalleryProps {
-  color: any;
+  currentColor: any;
   photos: any;
 }
 
-const Gallery: React.FC<GalleryProps> = ({ color, photos }) => {
+const Gallery: React.FC<GalleryProps> = ({ currentColor, photos }) => {
   const [page, setPage] = useState<1 | 2>(2);
 
   const handlePagination = () => {
@@ -19,9 +18,9 @@ const Gallery: React.FC<GalleryProps> = ({ color, photos }) => {
   };
 
   return (
-    <div
-      className={layoutStyles.frame}
-      style={{ backgroundColor: `var(--${color})` }}
+    <section
+      className="main-frame main-frame--has-no-margin-left"
+      style={{ backgroundColor: `var(--${currentColor})` }}
     >
       {photos.length > 16 && (
         <div
@@ -49,7 +48,7 @@ const Gallery: React.FC<GalleryProps> = ({ color, photos }) => {
             )
           )}
       </Grid>
-    </div>
+    </section>
   );
 };
 

@@ -12,11 +12,12 @@ import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
 import Image from "next/image";
 import imageCompression from "browser-image-compression";
+import { COLORS } from "@/app/constants/colors";
 
 type PhotoForm = z.infer<typeof createPhotoSchema>;
 
 const NewPhotoPage = () => {
-  // @todo to move to a global constant file
+  // @todo: to move to a global constant file
   const months = [
     "January",
     "February",
@@ -30,19 +31,6 @@ const NewPhotoPage = () => {
     "October",
     "November",
     "December",
-  ];
-
-  const colors = [
-    "black",
-    "white",
-    "red",
-    "yellow",
-    "brown",
-    "grey",
-    "purple",
-    "blue",
-    "green",
-    "black-white",
   ];
 
   const [photo, setPhoto] = useState<File | null>(null);
@@ -130,11 +118,11 @@ const NewPhotoPage = () => {
       };
 
       await axios.post("/api/photos", payload);
-      
+
       reset();
-      setPhotoPreview(null)
-      // @todo change color alert when it's a success
-      // @todo remove the message as soon as an input is touch
+      setPhotoPreview(null);
+      // @todo: change color alert when it's a success
+      // @todo: remove the message as soon as an input is touch
       setError("photo added successfully !");
     } catch (error) {
       setError("An unexpected error occured.");
@@ -146,6 +134,7 @@ const NewPhotoPage = () => {
   return (
     <div className="flex gap-4 items-start">
       <div className="max-w-xl">
+        <h1 className="mb-5 text-3xl font-bold">Add a photo</h1>
         {error && (
           <Callout.Root color="red" className="mb-5">
             <Callout.Text>{error}</Callout.Text>
@@ -190,7 +179,7 @@ const NewPhotoPage = () => {
                 >
                   <Select.Trigger placeholder="Color" />
                   <Select.Content position="popper">
-                    {colors.map((color) => (
+                    {Object.values(COLORS).map((color) => (
                       <Select.Item key={color} value={color}>
                         {color}
                       </Select.Item>
