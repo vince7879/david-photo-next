@@ -6,10 +6,10 @@
   height: var(--main-square-border);
   border: solid 2px var(--white);
   margin-left: 230px;
-  // margin-top: 100px;
+  // margin-top: 100px; // @todo see what space to apply on top
 
   @media (max-width: 1024px) {
-    // margin: 100px auto;
+    // margin: 100px auto 0; // @todo see space to apply on top 
     margin: 0 auto;
   }
 }

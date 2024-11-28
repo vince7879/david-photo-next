@@ -9,15 +9,13 @@ interface GalleryPageProps {
 export const GalleryPage: React.FC<GalleryPageProps> = async ({
   params: { color },
 }) => {
-  // handle the redirect to 404 if color in url param is not valid
+  // @todo handle the redirect to 404 if color in url param is not valid
 
   const photos = await prisma.photo.findMany({ where: { color } });
 
   return (
     <>
-      {/* vertical sidebar with 
-  mini-mondrian at the top 
-  the squares of the other colors */}
+      {/* @todo vertical sidebar with mini-mondrian at the top and the squares of the other colors */}
       <Gallery color={color} photos={photos} />
     </>
   );

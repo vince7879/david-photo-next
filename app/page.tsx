@@ -7,7 +7,7 @@ import layoutStyles from "@/app/styles/Layout.module.scss";
 import { ColorShape } from "./components/ColorShape/ColorShape";
 import Image from "next/image";
 
-// move this into a constant file
+// @todo move this into a constant file
 export const COLORS = {
   BLACK: "black",
   WHITE: "white",

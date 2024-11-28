@@ -16,7 +16,7 @@ import imageCompression from "browser-image-compression";
 type PhotoForm = z.infer<typeof createPhotoSchema>;
 
 const NewPhotoPage = () => {
-  // to move to a global constant file
+  // @todo to move to a global constant file
   const months = [
     "January",
     "February",
@@ -133,8 +133,8 @@ const NewPhotoPage = () => {
       
       reset();
       setPhotoPreview(null)
-      // change color alert when it's a success
-      // + remove the message as soon as an input is touch
+      // @todo change color alert when it's a success
+      // @todo remove the message as soon as an input is touch
       setError("photo added successfully !");
     } catch (error) {
       setError("An unexpected error occured.");
