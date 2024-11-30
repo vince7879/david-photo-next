@@ -4,8 +4,10 @@ import React, { useState } from "react";
 import galleryStyles from "./Gallery.module.scss";
 import Image from "next/image";
 import { Grid } from "@radix-ui/themes";
+import classNames from "classnames";
 
 interface GalleryProps {
+  // @todo: add correct type on color
   currentColor: any;
   photos: any;
 }
@@ -19,8 +21,9 @@ const Gallery: React.FC<GalleryProps> = ({ currentColor, photos }) => {
 
   return (
     <section
-      className="main-frame main-frame--has-no-margin-left"
-      style={{ backgroundColor: `var(--${currentColor})` }}
+      className={classNames("main-frame main-frame--has-no-margin-left", {
+        [`main-frame--${currentColor}`]: true,
+      })}
     >
       {photos.length > 16 && (
         <div

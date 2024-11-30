@@ -63,8 +63,8 @@
     #ebebeb 3.5% */
 
     to top right, /* diagonal from top/left to bottom/right */
-    #fff 50%,   /* white color bottom/left */
-    #000 50%    /* black color top/right */
+    var(--white) 50%,   /* white color bottom/left */
+    var(--black) 50%    /* black color top/right */
     );
 
     &:hover {

@@ -17,8 +17,8 @@
   --green: #267C3F;
   --blue: #1a1e7c;
   --grey: #6F787D;
-  --recent: #FF7F50;
   --orange: #E67B22;
+  --recent: #FF7F50;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -37,7 +37,7 @@ body {
   position: relative;
   width: var(--main-square-border);
   height: var(--main-square-border);
-  border: solid 2px var(--white);
+  border: 2px solid var(--white);
   margin-left: var(--sidebar-place-width);
   /* margin-top: 100px; // @todo: see what space to apply on top */
 
@@ -45,11 +45,46 @@ body {
     /* margin: 100px auto 0; // @todo: see space to apply on top  */
     margin: 0 auto;
   }
+
+  &--has-no-margin-left {
+    margin-left: 0;
+  }
+
+  &--black {
+    background-color: var(--black);
+  }
+  &--white {
+    background-color: var(--white);
+  }
+  &--brown {
+    background-color: var(--brown);
+  }
+  &--yellow {
+    background-color: var(--yellow);
+  }
+  &--red {
+    background-color: var(--red);
+  }
+  &--purple {
+    background-color: var(--purple);
+  }
+  &--green {
+    background-color: var(--green);
+  }
+  &--blue {
+    background-color: var(--blue);
+  }
+  &--grey {
+    background-color: var(--grey);
+  }
+  &--orange {
+    background-color: var(--orange);
+  }
+  &--black-white {
+    background: linear-gradient(to top right, var(--white) 50%, var(--black) 50%),
+  }
 }
 
-.main-frame--has-no-margin-left {
-  margin-left: 0;
-}
 
 aside {
   flex-basis: var(--sidebar-place-width);
