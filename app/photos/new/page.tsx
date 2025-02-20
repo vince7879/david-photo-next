@@ -115,6 +115,7 @@ const NewPhotoPage = () => {
       const payload = {
         ...data,
         photoUrl: photoUploadResult.secure_url,
+        publicId: photoUploadResult.public_id,
       };
 
       await axios.post("/api/photos", payload);

@@ -16,7 +16,7 @@ const NavBar: React.FC<NavBarProps> = ({ currentColor }) => {
     <nav
       className={`flex flex-col justify-between items-center ${navBarStyles.navBar}`}
     >
-      {/* @todo: mini-mondrian at the top */}
+      {/* mini-mondrian to go to the homepage */}
       <Link href="/" className="mb-3.5">
         <Image
           src="/images/mondrian-mini.png"
@@ -25,7 +25,7 @@ const NavBar: React.FC<NavBarProps> = ({ currentColor }) => {
           height={50}
         />
       </Link>
-      {/* @todo: create the squares for the colors */}
+      {/* list of colors' squares to go to the galleries */}
       {Object.values(COLORS)
         .filter((color) => color !== currentColor)
         .map((color) => (

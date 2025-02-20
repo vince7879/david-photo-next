@@ -9,6 +9,7 @@ import { COLORS } from "@/app/constants/colors";
 
 const handleClickSign = () =>
   console.log("click signature to access admin panel");
+// @todo handle goto signature
 
 const Home: React.FC = () => (
   <section className="main-frame">

@@ -16,6 +16,7 @@ model Photo {
   month     String
   color     String
   photoUrl  String
+  publicId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

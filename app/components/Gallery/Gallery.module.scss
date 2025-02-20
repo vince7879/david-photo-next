@@ -11,7 +11,7 @@
   background-color: var(--black);
   grid-template-rows: repeat(4, minmax(0, 1fr));;
 
-  > img {
+  &__thumbnail {
     object-fit: contain;
     padding: 20px;
     transition: 0.3s;

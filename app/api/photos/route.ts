@@ -10,7 +10,13 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(validation.error.format(), { status: 400 })
 
     const newPhoto = await prisma.photo.create({
-        data: { place: body.place, month: body.month, color: body.color, photoUrl: body.photoUrl }
+        data: { 
+            place: body.place, 
+            month: body.month, 
+            color: body.color, 
+            photoUrl: body.photoUrl, 
+            publicId: body.publicId 
+        }
     })
 
     return NextResponse.json(newPhoto, { status: 201 })
