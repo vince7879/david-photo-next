@@ -14,7 +14,7 @@ const Photo: React.FC<PhotoProps> = ({ data }) => {
   const legend: string = `${
     data.place.charAt(0).toUpperCase() +
     data.place.slice(1)
-  }, ${data.month.toLowerCase()} 2024`;
+  }, ${data.month.toLowerCase()} ${data.year}`;
 
   return (
     <div>

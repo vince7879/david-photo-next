@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
         data: { 
             place: body.place, 
             month: body.month, 
+            year: body.year, 
             color: body.color, 
             photoUrl: body.photoUrl, 
             publicId: body.publicId 

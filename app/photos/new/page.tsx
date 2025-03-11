@@ -1,6 +1,13 @@
 "use client";
 
-import { Button, Callout, Select, Text, TextField } from "@radix-ui/themes";
+import {
+  Button,
+  Callout,
+  Flex,
+  Select,
+  Text,
+  TextField,
+} from "@radix-ui/themes";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -145,52 +152,82 @@ const NewPhotoPage = () => {
           <TextField.Root placeholder="Place" {...register("place")} />
           <ErrorMessage>{errors.place?.message}</ErrorMessage>
           {/* rework spacing between selects and submit btn */}
-          <div>
-            <Controller
-              name="month"
-              control={control}
-              render={({ field }) => (
-                <Select.Root
-                  {...field}
-                  value={field.value || ""}
-                  onValueChange={field.onChange}
-                >
-                  <Select.Trigger placeholder="Month" />
-                  <Select.Content position="popper">
-                    {months.map((month) => (
-                      <Select.Item key={month} value={month}>
-                        {month}
-                      </Select.Item>
-                    ))}
-                  </Select.Content>
-                </Select.Root>
-              )}
-            />
-            <ErrorMessage>{errors.month?.message}</ErrorMessage>
-          </div>
-          <div>
-            <Controller
-              name="color"
-              control={control}
-              render={({ field }) => (
-                <Select.Root
-                  {...field}
-                  value={field.value || ""}
-                  onValueChange={field.onChange}
-                >
-                  <Select.Trigger placeholder="Color" />
-                  <Select.Content position="popper">
-                    {Object.values(COLORS).map((color) => (
-                      <Select.Item key={color} value={color}>
-                        {color}
-                      </Select.Item>
-                    ))}
-                  </Select.Content>
-                </Select.Root>
-              )}
-            />
-            <ErrorMessage>{errors.color?.message}</ErrorMessage>
-          </div>
+          <Flex>
+            <div className="mr-5">
+              <Controller
+                name="year"
+                control={control}
+                render={({ field }) => (
+                  <Select.Root
+                    {...field}
+                    value={field.value || ""}
+                    onValueChange={field.onChange}
+                  >
+                    <Select.Trigger placeholder="Year" />
+                    <Select.Content position="popper">
+                      {Array.from(
+                        { length: new Date().getFullYear() - 2006 + 1 },
+                        (_v, mostOne) => `${2006 + mostOne}`
+                      )
+                        .reverse()
+                        .map((year) => (
+                          <Select.Item key={year} value={year}>
+                            {year}
+                          </Select.Item>
+                        ))}
+                    </Select.Content>
+                  </Select.Root>
+                )}
+              />
+              <ErrorMessage>{errors.year?.message}</ErrorMessage>
+            </div>
+            <div className="mr-5">
+              <Controller
+                name="month"
+                control={control}
+                render={({ field }) => (
+                  <Select.Root
+                    {...field}
+                    value={field.value || ""}
+                    onValueChange={field.onChange}
+                  >
+                    <Select.Trigger placeholder="Month" />
+                    <Select.Content position="popper">
+                      {months.map((month) => (
+                        <Select.Item key={month} value={month}>
+                          {month}
+                        </Select.Item>
+                      ))}
+                    </Select.Content>
+                  </Select.Root>
+                )}
+              />
+              <ErrorMessage>{errors.month?.message}</ErrorMessage>
+            </div>
+            <div>
+              <Controller
+                name="color"
+                control={control}
+                render={({ field }) => (
+                  <Select.Root
+                    {...field}
+                    value={field.value || ""}
+                    onValueChange={field.onChange}
+                  >
+                    <Select.Trigger placeholder="Color" />
+                    <Select.Content position="popper">
+                      {Object.values(COLORS).map((color) => (
+                        <Select.Item key={color} value={color}>
+                          {color}
+                        </Select.Item>
+                      ))}
+                    </Select.Content>
+                  </Select.Root>
+                )}
+              />
+              <ErrorMessage>{errors.color?.message}</ErrorMessage>
+            </div>
+          </Flex>
           <div>
             <input type="file" accept="image/*" onChange={handleFileSelect} />
           </div>
