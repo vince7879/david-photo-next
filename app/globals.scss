@@ -39,6 +39,7 @@ body {
   height: var(--main-square-border);
   border: 2px solid var(--white);
   margin-left: var(--sidebar-place-width);
+  flex-shrink: 0;
   /* margin-top: 100px; // @todo: see what space to apply on top */
 
   @media (max-width: 1024px) {
@@ -88,4 +89,9 @@ body {
 
 aside {
   flex-basis: var(--sidebar-place-width);
+  flex-shrink: 0;
+}
+
+main {
+  flex-shrink: 0;
 }

@@ -1,27 +1,20 @@
 import Gallery from "@/app/components/Gallery/Gallery";
-import NavBar from "@/app/components/NavBar/NavBar";
-import prisma from "@/prisma/client";
+import NavBarGallery from "@/app/components/NavBar/NavBarGallery/NavBarGallery";
 import React from "react";
 
-interface GalleryPageProps {
+export interface GalleryPageProps {
   params: { color: any };
 }
 
-export const GalleryPage: React.FC<GalleryPageProps> = async ({
+export const GalleryPage: React.FC<GalleryPageProps> = ({
   params: { color },
-}) => {
-  // @todo: handle the redirect to 404 if color in url param is not valid
-
-  const photos = await prisma.photo.findMany({ where: { color } });
-
-  return (
-    <>
-      <aside>
-        <NavBar currentColor={color} />
-      </aside>
-      <Gallery currentColor={color} photos={photos} />
-    </>
-  );
-};
+}) => (
+  <>
+    <aside>
+      <NavBarGallery currentColor={color} />
+    </aside>
+    <Gallery currentColor={color} />
+  </>
+);
 
 export default GalleryPage;

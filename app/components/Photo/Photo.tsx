@@ -1,57 +1,38 @@
 import React, { useState } from "react";
-import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { Text } from "@radix-ui/themes";
+import { rgbDataURL } from "@/app/constants/placeholderImage";
 
 interface PhotoProps {
-    id: number
+  data: any;
 }
 
-const Photo: React.FC<PhotoProps> = ({ id }) => {
-  const [isLoading, SetIsLoading] = useState<boolean>(true);
-  const searchParams = useSearchParams();
+const Photo: React.FC<PhotoProps> = ({ data }) => {
+  const [imageIsLoading, setImageIsLoading] = useState(true);
 
-
-  const shimmer = (w: number, h: number) => `
-<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <defs>
-    <linearGradient id="g">
-      <stop stop-color="#333" offset="20%" />
-      <stop stop-color="#222" offset="50%" />
-      <stop stop-color="#333" offset="70%" />
-    </linearGradient>
-  </defs>
-  <rect width="${w}" height="${h}" fill="#333" />
-  <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
-  <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1s" repeatCount="indefinite"  />
-</svg>`;
-
-  const toBase64 = (str: string) =>
-    typeof window === "undefined"
-      ? Buffer.from(str).toString("base64")
-      : window.btoa(str);
+  /* @todo: handle year in the photo data */
+  const legend: string = `${
+    data.place.charAt(0).toUpperCase() +
+    data.place.slice(1)
+  }, ${data.month.toLowerCase()} 2024`;
 
   return (
     <div>
       <Image
-        src={`https://res.cloudinary.com/dnaf0ui17/image/upload/${id}.jpg`}
-        alt=""
-        width={800}
-        height={650}
-        placeholder={`data:image/svg+xml;base64,${toBase64(shimmer(800, 650))}`}
+        src={data.photoUrl}
+        alt={legend}
+        width={1000}
+        height={670}
+        placeholder="blur"
+        blurDataURL={rgbDataURL(46, 46, 46)}
         style={{
           objectFit: "contain",
-          maxHeight: "650px",
+          maxHeight: "670px",
           objectPosition: "left",
         }}
-        onLoad={() => SetIsLoading(false)}
+        onLoad={() => setImageIsLoading(false)}
       />
-      {!isLoading && (
-        <Text as="p">{`${
-          searchParams.get("place")!.charAt(0).toUpperCase() +
-          searchParams.get("place")!.slice(1)
-        }, ${searchParams.get("month")} 2024`}</Text>
-      )}
+      {!imageIsLoading && <Text as="p">{legend}</Text>}
     </div>
   );
 };

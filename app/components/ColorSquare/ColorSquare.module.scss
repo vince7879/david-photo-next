@@ -7,4 +7,18 @@
     border-left-color: grey;
     border-bottom-color: grey;
   }
+
+  &--is-button {
+    display: flex;
+    justify-content: center;
+  }
+
+  &--is-disabled {
+    opacity: 0.7;
+    cursor: default;
+
+    &:hover {
+      filter: brightness(1);
+    }
+  }
 }

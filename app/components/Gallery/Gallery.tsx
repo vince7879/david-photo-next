@@ -1,28 +1,42 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import galleryStyles from "./Gallery.module.scss";
 import Image from "next/image";
-import { Grid } from "@radix-ui/themes";
+import { Grid, Skeleton } from "@radix-ui/themes";
 import classNames from "classnames";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 interface GalleryProps {
-  // @todo: add correct type on color and photos
+  // @todo: add correct type on color
   currentColor: any;
-  photos: any[];
 }
 
-const Gallery: React.FC<GalleryProps> = ({ currentColor, photos }) => {
+const Gallery: React.FC<GalleryProps> = ({ currentColor }) => {
   const router = useRouter();
   const [page, setPage] = useState<1 | 2>(2);
+  const [photosByColor, setPhotosByColor] = useState<any>();
+  const [isLoading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPhotosByColor = async () => {
+      const { data } = await axios.get("/api/photos/" + currentColor);
+      // @todo: handle the redirect to 404 if color in url param is not valid
+
+      setPhotosByColor(data);
+      setLoading(false);
+    };
+
+    fetchPhotosByColor();
+  }, [currentColor]);
 
   const handlePagination = () => {
     page === 2 ? setPage(1) : setPage(2);
   };
 
-  const handleClickThumbnail = (color, id, place, month) => {
-    router.push(`/gallery/${color}/photo/${id}?place=${place}&month=${month}`);
+  const handleClickThumbnail = (color, id) => {
+    router.push(`/gallery/${color}/photo/${id}`);
   };
 
   return (
@@ -31,7 +45,7 @@ const Gallery: React.FC<GalleryProps> = ({ currentColor, photos }) => {
         [`main-frame--${currentColor}`]: true,
       })}
     >
-      {photos.length > 16 && (
+      {!isLoading && photosByColor.length > 16 && (
         <div
           className={galleryStyles.paginationNumber}
           onClick={handlePagination}
@@ -40,26 +54,30 @@ const Gallery: React.FC<GalleryProps> = ({ currentColor, photos }) => {
         </div>
       )}
       <Grid columns="4" className={galleryStyles.thumbnailsFrame}>
-        {photos
-          .slice(page === 2 ? 0 : 16, page === 2 ? 16 : undefined)
-          .map((photo, id: React.Key | null | undefined) => (
-            <Image
-              key={photo.id}
-              src={photo.photoUrl}
-              alt={photo.place}
-              width={200}
-              height={200}
-              className={galleryStyles.thumbnailsFrame__thumbnail}
-              onClick={() =>
-                handleClickThumbnail(
-                  currentColor,
-                  photo.publicId,
-                  photo.place,
-                  photo.month
-                )
-              }
-            />
-          ))}
+        {isLoading
+          ? Array.from({ length: 16 }).map((_, index) => (
+              <Skeleton
+                key={index}
+                width="90px"
+                height="90px"
+                style={{ placeSelf: "center" }}
+              />
+            ))
+          : photosByColor
+              .slice(page === 2 ? 0 : 16, page === 2 ? 16 : undefined)
+              .map((photo) => (
+                <Image
+                  key={photo.id}
+                  src={photo.photoUrl}
+                  alt={photo.place}
+                  width={200}
+                  height={200}
+                  className={galleryStyles.thumbnailsFrame__thumbnail}
+                  onClick={() =>
+                    handleClickThumbnail(currentColor, photo.publicId)
+                  }
+                />
+              ))}
       </Grid>
     </section>
   );
