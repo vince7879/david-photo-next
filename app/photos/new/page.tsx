@@ -20,6 +20,7 @@ import Spinner from "@/app/components/Spinner";
 import Image from "next/image";
 import imageCompression from "browser-image-compression";
 import { COLORS } from "@/app/constants/colors";
+import Link from "next/link";
 
 type PhotoForm = z.infer<typeof createPhotoSchema>;
 
@@ -140,112 +141,129 @@ const NewPhotoPage = () => {
   });
 
   return (
-    <div className="flex gap-4 items-start">
-      <div className="max-w-xl">
-        <h1 className="mb-5 text-3xl font-bold">Add a photo</h1>
-        {error && (
-          <Callout.Root color="red" className="mb-5">
-            <Callout.Text>{error}</Callout.Text>
-          </Callout.Root>
-        )}
-        <form className="max-w-xl space-y-3" onSubmit={onSubmit}>
-          <TextField.Root placeholder="Place" {...register("place")} />
-          <ErrorMessage>{errors.place?.message}</ErrorMessage>
-          {/* rework spacing between selects and submit btn */}
-          <Flex>
-            <div className="mr-5">
-              <Controller
-                name="year"
-                control={control}
-                render={({ field }) => (
-                  <Select.Root
-                    {...field}
-                    value={field.value || ""}
-                    onValueChange={field.onChange}
-                  >
-                    <Select.Trigger placeholder="Year" />
-                    <Select.Content position="popper">
-                      {Array.from(
-                        { length: new Date().getFullYear() - 2006 + 1 },
-                        (_v, mostOne) => `${2006 + mostOne}`
-                      )
-                        .reverse()
-                        .map((year) => (
-                          <Select.Item key={year} value={year}>
-                            {year}
+    <>
+      <aside>
+        {/* @todo: this will be de navbar for the backoffice - this one is temporary just to add the logo to go back to the homepage */}
+        <nav className={`flex flex-col justify-between items-center`}>
+          {/* mini-mondrian to go to the homepage */}
+          <Link href="/" className="mb-3.5">
+            <Image
+              src="/images/mondrian-mini.png"
+              alt="mondrian-mini"
+              width={50}
+              height={50}
+              priority={true}
+            />
+          </Link>
+        </nav>
+      </aside>
+      <div className="flex gap-4 items-start">
+        <div className="max-w-xl">
+          <h1 className="mb-5 text-3xl font-bold">Add a photo</h1>
+          <form className="max-w-xl space-y-3" onSubmit={onSubmit}>
+            <TextField.Root placeholder="Place" {...register("place")} />
+            <ErrorMessage>{errors.place?.message}</ErrorMessage>
+            {/* rework spacing between selects and submit btn */}
+            <Flex>
+              <div className="mr-5">
+                <Controller
+                  name="year"
+                  control={control}
+                  render={({ field }) => (
+                    <Select.Root
+                      {...field}
+                      value={field.value || ""}
+                      onValueChange={field.onChange}
+                    >
+                      <Select.Trigger placeholder="Year" />
+                      <Select.Content position="popper">
+                        {Array.from(
+                          { length: new Date().getFullYear() - 2006 + 1 },
+                          (_v, mostOne) => `${2006 + mostOne}`
+                        )
+                          .reverse()
+                          .map((year) => (
+                            <Select.Item key={year} value={year}>
+                              {year}
+                            </Select.Item>
+                          ))}
+                      </Select.Content>
+                    </Select.Root>
+                  )}
+                />
+                <ErrorMessage>{errors.year?.message}</ErrorMessage>
+              </div>
+              <div className="mr-5">
+                <Controller
+                  name="month"
+                  control={control}
+                  render={({ field }) => (
+                    <Select.Root
+                      {...field}
+                      value={field.value || ""}
+                      onValueChange={field.onChange}
+                    >
+                      <Select.Trigger placeholder="Month" />
+                      <Select.Content position="popper">
+                        {months.map((month) => (
+                          <Select.Item key={month} value={month}>
+                            {month}
                           </Select.Item>
                         ))}
-                    </Select.Content>
-                  </Select.Root>
-                )}
-              />
-              <ErrorMessage>{errors.year?.message}</ErrorMessage>
-            </div>
-            <div className="mr-5">
-              <Controller
-                name="month"
-                control={control}
-                render={({ field }) => (
-                  <Select.Root
-                    {...field}
-                    value={field.value || ""}
-                    onValueChange={field.onChange}
-                  >
-                    <Select.Trigger placeholder="Month" />
-                    <Select.Content position="popper">
-                      {months.map((month) => (
-                        <Select.Item key={month} value={month}>
-                          {month}
-                        </Select.Item>
-                      ))}
-                    </Select.Content>
-                  </Select.Root>
-                )}
-              />
-              <ErrorMessage>{errors.month?.message}</ErrorMessage>
-            </div>
+                      </Select.Content>
+                    </Select.Root>
+                  )}
+                />
+                <ErrorMessage>{errors.month?.message}</ErrorMessage>
+              </div>
+              <div>
+                <Controller
+                  name="color"
+                  control={control}
+                  render={({ field }) => (
+                    <Select.Root
+                      {...field}
+                      value={field.value || ""}
+                      onValueChange={field.onChange}
+                    >
+                      <Select.Trigger placeholder="Color" />
+                      <Select.Content position="popper">
+                        {Object.values(COLORS).map((color) => (
+                          <Select.Item key={color} value={color}>
+                            {color}
+                          </Select.Item>
+                        ))}
+                      </Select.Content>
+                    </Select.Root>
+                  )}
+                />
+                <ErrorMessage>{errors.color?.message}</ErrorMessage>
+              </div>
+            </Flex>
             <div>
-              <Controller
-                name="color"
-                control={control}
-                render={({ field }) => (
-                  <Select.Root
-                    {...field}
-                    value={field.value || ""}
-                    onValueChange={field.onChange}
-                  >
-                    <Select.Trigger placeholder="Color" />
-                    <Select.Content position="popper">
-                      {Object.values(COLORS).map((color) => (
-                        <Select.Item key={color} value={color}>
-                          {color}
-                        </Select.Item>
-                      ))}
-                    </Select.Content>
-                  </Select.Root>
-                )}
-              />
-              <ErrorMessage>{errors.color?.message}</ErrorMessage>
+              <input type="file" accept="image/*" onChange={handleFileSelect} />
             </div>
-          </Flex>
-          <div>
-            <input type="file" accept="image/*" onChange={handleFileSelect} />
-          </div>
-          <Button disabled={isSubmitting} className="my-3">
-            Submit New Photo {isSubmitting && <Spinner />}
-          </Button>
-        </form>
+            <Button disabled={isSubmitting} className="my-3">
+              Submit New Photo {isSubmitting && <Spinner />}
+            </Button>
+          </form>
+          {error && (
+            <Callout.Root color="red" className="mt-5">
+              <Callout.Text>{error}</Callout.Text>
+            </Callout.Root>
+          )}
+        </div>
+        {photoPreview && (
+          <Image
+            src={photoPreview}
+            alt="Aperçu de l'image"
+            width={500}
+            height={180}
+            style={{ objectFit: "contain", maxHeight: "500px" }}
+          />
+        )}
       </div>
-      {photoPreview && (
-        <Image
-          src={photoPreview}
-          alt="Aperçu de l'image"
-          width={500}
-          height={180}
-          style={{ objectFit: "contain", maxHeight: "500px" }}
-        />
-      )}
-    </div>
+    </>
   );
 };
 
