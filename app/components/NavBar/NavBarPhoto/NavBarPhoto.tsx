@@ -3,22 +3,23 @@ import navBarStyles from "../NavBar.module.scss";
 import Link from "next/link";
 import Image from "next/image";
 import { ColorSquare } from "../../ColorSquare/ColorSquare";
+import { usePhotosByColorData } from "@/app/contexts/GalleryPhotosContext";
 
-interface NavBarGalleryProps {
+interface NavBarPhotoProps {
   currentColor: any;
-  galleryIds?: string[];
   currentPhotoId?: string;
-  onButtonClicked?: (data: string) => void;
+  onButtonClicked: (id: string) => void;
 }
 
-const NavBarGallery: React.FC<NavBarGalleryProps> = ({
+const NavBarPhoto: React.FC<NavBarPhotoProps> = ({
   currentColor,
-  galleryIds,
   currentPhotoId,
   onButtonClicked,
 }) => {
+  const photosByColor = usePhotosByColorData()
+  const galleryIds = photosByColor?.map((photo) => photo.publicId)
   const currentPhotoIndexInGallery = galleryIds?.findIndex(
-    (galleryId) => galleryId === currentPhotoId
+    (id: string) => id === currentPhotoId
   );
 
   return (
@@ -37,7 +38,7 @@ const NavBarGallery: React.FC<NavBarGalleryProps> = ({
       {/* current gallery color (for the Photo page) */}
       {<ColorSquare color={currentColor} />}
 
-      {/* @todo: display 2 arrows to swith from to another photo from that gallery */}
+      {/* 2 arrows to swith from one to another photo of the current gallery */}
       {galleryIds && (
         <>
           <ColorSquare
@@ -45,7 +46,7 @@ const NavBarGallery: React.FC<NavBarGalleryProps> = ({
             buttonVariant="previous"
             isDisabled={currentPhotoIndexInGallery === 0}
             className="mt-3.5"
-            onButtonClicked={onButtonClicked}
+            onButtonClicked={() => onButtonClicked(photosByColor[currentPhotoIndexInGallery - 1].publicId)}
           >
             <Image
               width="48"
@@ -59,7 +60,7 @@ const NavBarGallery: React.FC<NavBarGalleryProps> = ({
             buttonVariant="next"
             isDisabled={currentPhotoIndexInGallery === galleryIds.length - 1}
             className="mt-3.5"
-            onButtonClicked={onButtonClicked}
+            onButtonClicked={() => onButtonClicked(photosByColor[currentPhotoIndexInGallery + 1].publicId)}
           >
             <Image
               width="48"
@@ -74,4 +75,4 @@ const NavBarGallery: React.FC<NavBarGalleryProps> = ({
   );
 };
 
-export default NavBarGallery;
+export default NavBarPhoto;

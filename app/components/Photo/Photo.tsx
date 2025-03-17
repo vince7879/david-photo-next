@@ -1,25 +1,35 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import { Text } from "@radix-ui/themes";
+import { Skeleton, Text } from "@radix-ui/themes";
 import { rgbDataURL } from "@/app/constants/placeholderImage";
+import {
+  useGalleryPhotosLoadingSelector,
+  usePhotosByColorData,
+} from "@/app/contexts/GalleryPhotosContext";
 
 interface PhotoProps {
-  data: any;
+  id?: string;
 }
 
-const Photo: React.FC<PhotoProps> = ({ data }) => {
+const Photo: React.FC<PhotoProps> = ({ id }) => {
+  const photosByColor = usePhotosByColorData();
+  const isLoading = useGalleryPhotosLoadingSelector();
   const [imageIsLoading, setImageIsLoading] = useState(true);
 
-  /* @todo: handle year in the photo data */
+  const photo = photosByColor?.find((photo) => photo.publicId === id);
   const legend: string = `${
-    data.place.charAt(0).toUpperCase() +
-    data.place.slice(1)
-  }, ${data.month.toLowerCase()} ${data.year}`;
+    photo?.place.charAt(0).toUpperCase() + photo?.place.slice(1)
+  }, ${photo?.month.toLowerCase()} ${photo?.year}`;
 
-  return (
+  return isLoading ? (
+    <Skeleton
+      width={{ initial: "478px", md: "735px", lg: "1000px" }}
+      height={{ initial: "318px", md: "490px", lg: "670px" }}
+    />
+  ) : (
     <div>
       <Image
-        src={data.photoUrl}
+        src={photo.photoUrl}
         alt={legend}
         width={1000}
         height={670}

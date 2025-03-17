@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import galleryStyles from "./Gallery.module.scss";
 import Image from "next/image";
 import { Grid, Skeleton } from "@radix-ui/themes";
 import classNames from "classnames";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import { useGalleryPhotosLoadingSelector, usePhotosByColorData } from "@/app/contexts/GalleryPhotosContext";
 
 interface GalleryProps {
   // @todo: add correct type on color
@@ -16,20 +16,8 @@ interface GalleryProps {
 const Gallery: React.FC<GalleryProps> = ({ currentColor }) => {
   const router = useRouter();
   const [page, setPage] = useState<1 | 2>(2);
-  const [photosByColor, setPhotosByColor] = useState<any>();
-  const [isLoading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchPhotosByColor = async () => {
-      const { data } = await axios.get("/api/photos/" + currentColor);
-      // @todo: handle the redirect to 404 if color in url param is not valid
-
-      setPhotosByColor(data);
-      setLoading(false);
-    };
-
-    fetchPhotosByColor();
-  }, [currentColor]);
+  const photosByColor = usePhotosByColorData()
+  const isLoading = useGalleryPhotosLoadingSelector()
 
   const handlePagination = () => {
     page === 2 ? setPage(1) : setPage(2);

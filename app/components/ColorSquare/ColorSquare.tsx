@@ -10,7 +10,7 @@ export interface ColorSquareProps {
   isDisabled?: boolean
   className?: string
   children?: React.ReactNode
-  onButtonClicked?: (data: string) => void;
+  onButtonClicked?: () => void;
 }
 
 export const ColorSquare: React.FC<ColorSquareProps> = ({
@@ -34,7 +34,7 @@ export const ColorSquare: React.FC<ColorSquareProps> = ({
   );
 
   return buttonVariant && onButtonClicked ? (
-    <button disabled={isDisabled} onClick={() => onButtonClicked(buttonVariant)} className={className}>{square}</button>
+    <button disabled={isDisabled} onClick={onButtonClicked} className={className}>{square}</button>
   ) : (
     <Link href={`/gallery/${color}`} className={className}>{square}</Link>
   );
