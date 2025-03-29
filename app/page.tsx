@@ -7,11 +7,13 @@ import { ColorShape } from "./components/ColorShape/ColorShape";
 import Image from "next/image";
 import { COLORS } from "@/app/constants/colors";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react"
 
 const Home: React.FC = () => {
   const router = useRouter();
-  const handleClickSign = () => {
-    router.push(`/photos/new`);
+  const handleSignIn = () => {
+    signIn("google", { redirectTo: "/dashboard/add-photo" })
+    // router.push(`/photos/new`);
     // @todo handle goto signature
   };
 
@@ -47,14 +49,13 @@ const Home: React.FC = () => {
       {/* center green */}
       <ColorShape variant="third-horizontal-rectangle" color={COLORS.GREEN} />
 
-      <div className={classNames(homeStyles.shape, homeStyles.signature)}>
+      <div className={classNames(homeStyles.shape, homeStyles.signature)} onClick={() => handleSignIn()}>
         <Image
           src="/images/sign.png"
           alt="signature"
           width={140}
           height={50}
-          style={{ objectFit: "contain" }}
-          onClick={() => handleClickSign()}
+          className="object-contain"
         />
       </div>
 

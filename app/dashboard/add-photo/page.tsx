@@ -21,10 +21,11 @@ import Image from "next/image";
 import imageCompression from "browser-image-compression";
 import { COLORS } from "@/app/constants/colors";
 import Link from "next/link";
+import { signOut } from "next-auth/react"
 
 type PhotoForm = z.infer<typeof createPhotoSchema>;
 
-const NewPhotoPage = () => {
+const AddPhotoPage = () => {
   // @todo: to move to a global constant file
   const months = [
     "January",
@@ -155,6 +156,7 @@ const NewPhotoPage = () => {
               priority={true}
             />
           </Link>
+          <button onClick={() => signOut({ redirectTo: "/" })}>Sign Out</button>
         </nav>
       </aside>
       <div className="flex gap-4 items-start">
@@ -267,4 +269,4 @@ const NewPhotoPage = () => {
   );
 };
 
-export default NewPhotoPage;
+export default AddPhotoPage;

@@ -35,12 +35,8 @@ const Photo: React.FC<PhotoProps> = ({ id }) => {
         height={670}
         placeholder="blur"
         blurDataURL={rgbDataURL(46, 46, 46)}
-        style={{
-          objectFit: "contain",
-          maxHeight: "670px",
-          objectPosition: "left",
-        }}
         onLoad={() => setImageIsLoading(false)}
+        className="object-contain object-left max-h-[670px]"
       />
       {!imageIsLoading && <Text as="p">{legend}</Text>}
     </div>
