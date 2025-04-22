@@ -16,8 +16,8 @@ const NavBarPhoto: React.FC<NavBarPhotoProps> = ({
   currentPhotoId,
   onButtonClicked,
 }) => {
-  const photosByColor = usePhotosByColorData()
-  const galleryIds = photosByColor?.map((photo) => photo.publicId)
+  const photosByColor = usePhotosByColorData();
+  const galleryIds = photosByColor?.map((photo) => photo.publicId);
   const currentPhotoIndexInGallery = galleryIds?.findIndex(
     (id: string) => id === currentPhotoId
   );
@@ -42,11 +42,16 @@ const NavBarPhoto: React.FC<NavBarPhotoProps> = ({
       {galleryIds && (
         <>
           <ColorSquare
+            // @todo: color black for the black and white arrow btns
             color={currentColor}
             buttonVariant="previous"
             isDisabled={currentPhotoIndexInGallery === 0}
             className="mt-3.5"
-            onButtonClicked={() => onButtonClicked(photosByColor[currentPhotoIndexInGallery - 1].publicId)}
+            onButtonClicked={() =>
+              onButtonClicked(
+                photosByColor[currentPhotoIndexInGallery - 1].publicId
+              )
+            }
           >
             <Image
               width="48"
@@ -56,11 +61,16 @@ const NavBarPhoto: React.FC<NavBarPhotoProps> = ({
             />
           </ColorSquare>
           <ColorSquare
+            // @todo: color black for the black and white arrow btns
             color={currentColor}
             buttonVariant="next"
             isDisabled={currentPhotoIndexInGallery === galleryIds.length - 1}
             className="mt-3.5"
-            onButtonClicked={() => onButtonClicked(photosByColor[currentPhotoIndexInGallery + 1].publicId)}
+            onButtonClicked={() =>
+              onButtonClicked(
+                photosByColor[currentPhotoIndexInGallery + 1].publicId
+              )
+            }
           >
             <Image
               width="48"

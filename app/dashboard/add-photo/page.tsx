@@ -5,7 +5,6 @@ import {
   Callout,
   Flex,
   Select,
-  Text,
   TextField,
 } from "@radix-ui/themes";
 import { Controller, useForm } from "react-hook-form";
@@ -20,8 +19,7 @@ import Spinner from "@/app/components/Spinner";
 import Image from "next/image";
 import imageCompression from "browser-image-compression";
 import { COLORS } from "@/app/constants/colors";
-import Link from "next/link";
-import { signOut } from "next-auth/react"
+import NavBarDashboard from "@/app/components/NavBar/NavBarDashboard/NavBarDashboard";
 
 type PhotoForm = z.infer<typeof createPhotoSchema>;
 
@@ -144,20 +142,7 @@ const AddPhotoPage = () => {
   return (
     <>
       <aside>
-        {/* @todo: this will be de navbar for the backoffice - this one is temporary just to add the logo to go back to the homepage */}
-        <nav className={`flex flex-col justify-between items-center`}>
-          {/* mini-mondrian to go to the homepage */}
-          <Link href="/" className="mb-3.5">
-            <Image
-              src="/images/mondrian-mini.png"
-              alt="mondrian-mini"
-              width={50}
-              height={50}
-              priority={true}
-            />
-          </Link>
-          <button onClick={() => signOut({ redirectTo: "/" })}>Sign Out</button>
-        </nav>
+        <NavBarDashboard />
       </aside>
       <div className="flex gap-4 items-start">
         <div className="max-w-xl">

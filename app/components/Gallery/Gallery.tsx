@@ -52,7 +52,7 @@ const Gallery: React.FC<GalleryProps> = ({ currentColor }) => {
               />
             ))
           : photosByColor
-              .slice(page === 2 ? 0 : 16, page === 2 ? 16 : undefined)
+              .slice(page === 2 ? 0 : 16, page === 2 ? 16 : 32)
               .map((photo) => (
                 <Image
                   key={photo.id}
