@@ -6,6 +6,9 @@ import {
   useGalleryPhotosLoadingSelector,
   usePhotosByColorData,
 } from "@/app/contexts/GalleryPhotosContext";
+import photoStyles from "./Photo.module.scss";
+import classNames from "classnames";
+
 
 interface PhotoProps {
   id?: string;
@@ -36,7 +39,9 @@ const Photo: React.FC<PhotoProps> = ({ id }) => {
         placeholder="blur"
         blurDataURL={rgbDataURL(46, 46, 46)}
         onLoad={() => setImageIsLoading(false)}
-        className="object-contain object-left max-h-[670px]"
+        className={classNames("object-contain object-left max-h-[670px]", {
+          [photoStyles.image]: true
+        })}
       />
       {!imageIsLoading && <Text as="p">{legend}</Text>}
     </div>
