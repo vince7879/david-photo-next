@@ -21,7 +21,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en">
       <body className={inter.variable}>
         <Theme appearance="dark" accentColor="teal" scaling="105%">
-          <main className="p-5 mt-8 flex">{children}</main>
+          <main className="px-5 py-8 flex">{children}</main>
         </Theme>
       </body>
     </html>
