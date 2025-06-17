@@ -15,9 +15,23 @@ model Photo {
   place     String
   month     String
   year      String
-  color     String
+  color     Color
   photoUrl  String
   publicId  String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum Color {
+  black
+  white
+  brown
+  yellow
+  red
+  purple
+  green
+  blue
+  grey
+  blackwhite
+  orange
 }

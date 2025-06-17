@@ -7,10 +7,10 @@ import { Grid, Skeleton } from "@radix-ui/themes";
 import classNames from "classnames";
 import { useRouter } from "next/navigation";
 import { useGalleryPhotosLoadingSelector, usePhotosByColorData } from "@/app/contexts/GalleryPhotosContext";
+import { Photo } from "@prisma/client"
 
 interface GalleryProps {
-  // @todo: add correct type on color
-  currentColor: any;
+  currentColor: Photo['color'];
 }
 
 const Gallery: React.FC<GalleryProps> = ({ currentColor }) => {
@@ -23,7 +23,7 @@ const Gallery: React.FC<GalleryProps> = ({ currentColor }) => {
     page === 2 ? setPage(1) : setPage(2);
   };
 
-  const handleClickThumbnail = (color, id) => {
+  const handleClickThumbnail = (color: Photo['color'], id: Photo['publicId']) => {
     router.push(`/gallery/${color}/photo/${id}`);
   };
 
@@ -33,7 +33,7 @@ const Gallery: React.FC<GalleryProps> = ({ currentColor }) => {
         [`main-frame--${currentColor}`]: true,
       })}
     >
-      {!isLoading && photosByColor.length > 16 && (
+      {!isLoading && photosByColor && photosByColor.length > 16 && (
         <div
           className={galleryStyles.paginationNumber}
           onClick={handlePagination}
@@ -41,6 +41,7 @@ const Gallery: React.FC<GalleryProps> = ({ currentColor }) => {
           {page}
         </div>
       )}
+      {/* @todo add tiny border to thumbnails */}
       <Grid columns="4" className={galleryStyles.thumbnailsFrame}>
         {isLoading
           ? Array.from({ length: 16 }).map((_, index) => (
@@ -51,8 +52,7 @@ const Gallery: React.FC<GalleryProps> = ({ currentColor }) => {
                 style={{ placeSelf: "center" }}
               />
             ))
-          : photosByColor
-              .slice(page === 2 ? 0 : 16, page === 2 ? 16 : 32)
+          : photosByColor?.slice(page === 2 ? 0 : 16, page === 2 ? 16 : 32)
               .map((photo) => (
                 <Image
                   key={photo.id}

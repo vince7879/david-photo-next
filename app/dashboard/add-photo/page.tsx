@@ -18,7 +18,7 @@ import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
 import Image from "next/image";
 import imageCompression from "browser-image-compression";
-import { COLORS } from "@/app/constants/colors";
+import { Color } from "@prisma/client";
 import NavBarDashboard from "@/app/components/NavBar/NavBarDashboard/NavBarDashboard";
 
 type PhotoForm = z.infer<typeof createPhotoSchema>;
@@ -54,7 +54,6 @@ const AddPhotoPage = () => {
   } = useForm<PhotoForm>({
     resolver: zodResolver(createPhotoSchema),
   });
-  const router = useRouter();
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -215,9 +214,9 @@ const AddPhotoPage = () => {
                     >
                       <Select.Trigger placeholder="Color" />
                       <Select.Content position="popper">
-                        {Object.values(COLORS).map((color) => (
+                        {Object.values(Color).map((color) => (
                           <Select.Item key={color} value={color}>
-                            {color}
+                            {color === 'blackwhite' ? 'black & white' : color}
                           </Select.Item>
                         ))}
                       </Select.Content>

@@ -3,9 +3,10 @@ import classNames from "classnames";
 import Link from "next/link";
 import colorShapeStyles from "@/app/components/ColorShape/ColorShape.module.scss";
 import colorSquareStyles from "./ColorSquare.module.scss";
+import { Color } from "@prisma/client";
 
 export interface ColorSquareProps {
-  color: any;
+  color: Color;
   buttonVariant?: 'previous' | 'next';
   isDisabled?: boolean
   className?: string

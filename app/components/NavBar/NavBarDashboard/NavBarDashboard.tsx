@@ -1,6 +1,5 @@
 import React from "react";
 import navBarStyles from "../NavBar.module.scss";
-import { COLORS } from "@/app/constants/colors";
 import Link from "next/link";
 import Image from "next/image";
 import { ColorSquare } from "../../ColorSquare/ColorSquare";

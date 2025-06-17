@@ -3,10 +3,11 @@ import classNames from "classnames";
 import Link from "next/link";
 import homeStyles from "@/app/styles/Home.module.scss"
 import colorShapeStyles from "./ColorShape.module.scss";
+import { Color } from '@prisma/client';
 
 interface ColorShapeProps {
   variant: string
-  color: any
+  color: Color
 }
 
 export const ColorShape: React.FC<ColorShapeProps> = ({ variant, color }) => (

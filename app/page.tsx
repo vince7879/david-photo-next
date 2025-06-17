@@ -5,7 +5,7 @@ import classNames from "classnames";
 import homeStyles from "@/app/styles/Home.module.scss";
 import { ColorShape } from "./components/ColorShape/ColorShape";
 import Image from "next/image";
-import { COLORS } from "@/app/constants/colors";
+import { Color } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react"
 
@@ -25,29 +25,29 @@ const Home: React.FC = () => {
       </div>
       {/* </TopWhiteRecent> */}
       {/* top white */}
-      <ColorShape variant="top-middle" color={COLORS.WHITE} />
+      <ColorShape variant="top-middle" color={Color.white} />
       {/* top orange */}
-      <ColorShape variant="top-right" color={COLORS.ORANGE} />
+      <ColorShape variant="top-right" color={Color.orange} />
       {/* left brown */}
-      <ColorShape variant="left-side-top" color={COLORS.BROWN} />
+      <ColorShape variant="left-side-top" color={Color.brown} />
       {/* left white */}
-      <ColorShape variant="left-side-middle" color={COLORS.WHITE} />
+      <ColorShape variant="left-side-middle" color={Color.white} />
       {/* left yellow */}
-      <ColorShape variant="left-side-bottom" color={COLORS.YELLOW} />
+      <ColorShape variant="left-side-bottom" color={Color.yellow} />
       {/* Big red */}
-      <ColorShape variant="big-square" color={COLORS.RED} />
+      <ColorShape variant="big-square" color={Color.red} />
       {/* big yellow */}
-      <ColorShape variant="top-small-square" color={COLORS.YELLOW} />
+      <ColorShape variant="top-small-square" color={Color.yellow} />
       {/* long white */}
-      <ColorShape variant="first-vertical-rectangle" color={COLORS.WHITE} />
+      <ColorShape variant="first-vertical-rectangle" color={Color.white} />
       {/* long purple */}
-      <ColorShape variant="second-vertical-rectangle" color={COLORS.PURPLE} />
+      <ColorShape variant="second-vertical-rectangle" color={Color.purple} />
       {/* purple square */}
-      <ColorShape variant="bottom-small-square" color={COLORS.PURPLE} />
+      <ColorShape variant="bottom-small-square" color={Color.purple} />
       {/* center black */}
-      <ColorShape variant="first-horizontal-rectangle" color={COLORS.BLACK} />
+      <ColorShape variant="first-horizontal-rectangle" color={Color.black} />
       {/* center green */}
-      <ColorShape variant="third-horizontal-rectangle" color={COLORS.GREEN} />
+      <ColorShape variant="third-horizontal-rectangle" color={Color.green} />
 
       <div className={classNames(homeStyles.shape, homeStyles.signature)} onClick={() => handleSignIn()}>
         <Image
@@ -60,11 +60,11 @@ const Home: React.FC = () => {
       </div>
 
       {/* big blue */}
-      <ColorShape variant="big-horizontal-rectangle" color={COLORS.BLUE} />
+      <ColorShape variant="big-horizontal-rectangle" color={Color.blue} />
       {/* bottom grey */}
-      <ColorShape variant="tiny-horizontal-rectangle" color={COLORS.GREY} />
+      <ColorShape variant="tiny-horizontal-rectangle" color={Color.grey} />
       {/* bottom black & white */}
-      <ColorShape variant="bottom-rectangle" color={COLORS.BLACK_WHITE} />
+      <ColorShape variant="bottom-rectangle" color={Color.blackwhite} />
 
       <div className={classNames(homeStyles.shape, homeStyles.copyright)}>
         <span>&copy; 2010 DAVID PREAT</span>
@@ -72,9 +72,9 @@ const Home: React.FC = () => {
       </div>
 
       {/* right white */}
-      <ColorShape variant="right-side-top" color={COLORS.WHITE} />
+      <ColorShape variant="right-side-top" color={Color.white} />
       {/* right orange */}
-      <ColorShape variant="right-side-bottom" color={COLORS.ORANGE} />
+      <ColorShape variant="right-side-bottom" color={Color.orange} />
     </section>
   );
 };

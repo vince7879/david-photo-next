@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { DndContext, closestCenter } from "@dnd-kit/core";
+import { DndContext, DragEndEvent, closestCenter } from "@dnd-kit/core";
 import {
   arrayMove,
   rectSortingStrategy,
@@ -17,9 +17,10 @@ import Image from "next/image";
 import { Button, Flex, Grid } from "@radix-ui/themes";
 import dragAndDropPanelStyles from "./DragAndDropPanel.module.scss";
 import classNames from "classnames";
+import { Photo } from "@prisma/client";
 
-// @todo extract component and handle type of props
-const PhotoItem = ({ id, url }) => {
+// @todo extract component
+const PhotoItem = ({ id, url }: {id: Photo['id']; url: Photo['photoUrl']}) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
 
@@ -53,17 +54,17 @@ const DragAndDropPanel: React.FC = () => {
     }
   }, [photosByColor]);
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (active.id !== over.id) {
-      const activeIndex = sortedPhotos.findIndex(
+    if (active.id !== over?.id) {
+      const activeIndex = sortedPhotos!.findIndex(
         (photo) => photo.id === active.id
       );
-      const overIndex = sortedPhotos.findIndex((photo) => photo.id === over.id);
+      const overIndex = sortedPhotos!.findIndex((photo) => photo.id === over?.id);
 
       setSortedPhotos((prevPhotos) =>
-        arrayMove(prevPhotos, activeIndex, overIndex)
+        arrayMove(prevPhotos!, activeIndex, overIndex)
       );
     }
   };

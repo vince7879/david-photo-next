@@ -1,21 +1,28 @@
 "use client";
 
 import { createContext, useContextSelector } from "use-context-selector";
-import React, { useEffect, useState } from "react";
+import React, { PropsWithChildren, useEffect, useState } from "react";
 import axios from "axios";
+import { Photo, Color } from "@prisma/client";
 
-const GalleryPhotosContext = createContext<any>(null);
-
-interface GalleryProps {
-  // @todo: add correct type on color
-  color: any;
-  children: React.ReactNode;
+interface IContext {
+  photosByColor?: Photo[];
+  isLoading: boolean;
 }
-export const GalleryPhotosProvider: React.FC<GalleryProps> = ({
+
+const GalleryPhotosContext = createContext<IContext>({
+  photosByColor: undefined,
+  isLoading: true,
+});
+
+interface IProvider {
+  color: Color;
+}
+export const GalleryPhotosProvider = ({
   color,
   children,
-}) => {
-  const [photosByColor, setPhotosByColor] = useState<any>();
+}: PropsWithChildren<IProvider>) => {
+  const [photosByColor, setPhotosByColor] = useState<IContext['photosByColor']>();
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {

@@ -8,10 +8,11 @@ import {
 } from "@/app/contexts/GalleryPhotosContext";
 import photoStyles from "./Photo.module.scss";
 import classNames from "classnames";
+import { Photo as TPhoto } from "@prisma/client"
 
 
 interface PhotoProps {
-  id?: string;
+  id?: TPhoto['publicId'];
 }
 
 const Photo: React.FC<PhotoProps> = ({ id }) => {
@@ -21,7 +22,7 @@ const Photo: React.FC<PhotoProps> = ({ id }) => {
 
   const photo = photosByColor?.find((photo) => photo.publicId === id);
   const legend: string = `${
-    photo?.place.charAt(0).toUpperCase() + photo?.place.slice(1)
+    photo && photo.place.charAt(0).toUpperCase() + photo.place.slice(1)
   }, ${photo?.month.toLowerCase()} ${photo?.year}`;
 
   return isLoading ? (
@@ -32,7 +33,7 @@ const Photo: React.FC<PhotoProps> = ({ id }) => {
   ) : (
     <div>
       <Image
-        src={photo.photoUrl}
+        src={photo!.photoUrl}
         alt={legend}
         width={1000}
         height={670}

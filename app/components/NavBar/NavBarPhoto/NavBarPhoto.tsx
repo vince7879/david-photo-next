@@ -4,10 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { ColorSquare } from "../../ColorSquare/ColorSquare";
 import { usePhotosByColorData } from "@/app/contexts/GalleryPhotosContext";
+import { Photo } from "@prisma/client"
 
 interface NavBarPhotoProps {
-  currentColor: any;
-  currentPhotoId?: string;
+  currentColor: Photo['color'];
+  currentPhotoId?: Photo['publicId'];
   onButtonClicked: (id: string) => void;
 }
 
@@ -39,7 +40,7 @@ const NavBarPhoto: React.FC<NavBarPhotoProps> = ({
       {<ColorSquare color={currentColor} />}
 
       {/* 2 arrows to swith from one to another photo of the current gallery */}
-      {galleryIds && (
+      {photosByColor && galleryIds && (currentPhotoIndexInGallery || currentPhotoIndexInGallery === 0) && (
         <>
           <ColorSquare
             // @todo: color black for the black and white arrow btns
