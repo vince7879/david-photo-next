@@ -1,9 +1,8 @@
 import React from "react";
-import navBarStyles from "../NavBar.module.scss";
 import Link from "next/link";
 import Image from "next/image";
-import { ColorSquare } from "../../ColorSquare/ColorSquare";
 import { signOut } from "next-auth/react";
+import { ExitIcon, ImageIcon, MoveIcon } from "@radix-ui/react-icons"
 
 // interface NavBarDashboardProps {
 //   currentColor: any;
@@ -13,7 +12,7 @@ import { signOut } from "next-auth/react";
 const NavBarDashboard: React.FC = () => (
   <nav className={`flex flex-col justify-between items-center`}>
   {/* mini-mondrian to go to the homepage */}
-  <Link href="/" className="mb-3.5">
+  <Link href="/" className="mb-6">
     <Image
       src="/images/mondrian-mini.png"
       alt="mondrian-mini"
@@ -22,9 +21,9 @@ const NavBarDashboard: React.FC = () => (
       priority={true}
     />
   </Link>
-  <Link href={"/dashboard/add-photo"}>Add Photo</Link>
-  <Link href={"/dashboard/reorder-photos"}>Reorder Photos</Link>
-  <button onClick={() => signOut({ redirectTo: "/" })}>Sign Out</button>
+  <Link href={"/dashboard/add-photo"} title="add a new photo" className="mb-3"><ImageIcon width="58" height="58"/></Link>
+  <Link href={"/dashboard/reorder-photos"} title="edit a gallery" className="mb-10"><MoveIcon width="58" height="58" /></Link>
+  <button title="sign out" onClick={() => signOut({ redirectTo: "/" })}><ExitIcon width="58" height="58" /></button>
 </nav>
 );
 
