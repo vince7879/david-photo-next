@@ -18,9 +18,23 @@ import { Button, Flex, Grid } from "@radix-ui/themes";
 import dragAndDropPanelStyles from "./DragAndDropPanel.module.scss";
 import classNames from "classnames";
 import { Photo } from "@prisma/client";
+import { Color } from "@prisma/client";
+import { areArraysEqual } from "@/app/helpers/arrayHelper";
+import axios from "axios";
+
+interface DragAndDropPanelProps {
+  currentColor: Color | null;
+  handleChooseGallery: () => void;
+}
 
 // @todo extract component
-const PhotoItem = ({ id, url }: {id: Photo['id']; url: Photo['photoUrl']}) => {
+const PhotoItem = ({
+  id,
+  url,
+}: {
+  id: Photo["id"];
+  url: Photo["photoUrl"];
+}) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
 
@@ -42,7 +56,10 @@ const PhotoItem = ({ id, url }: {id: Photo['id']; url: Photo['photoUrl']}) => {
   );
 };
 
-const DragAndDropPanel: React.FC = () => {
+const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
+  currentColor,
+  handleChooseGallery,
+}) => {
   const photosByColor = usePhotosByColorData();
   const isLoading = useGalleryPhotosLoadingSelector();
 
@@ -61,7 +78,9 @@ const DragAndDropPanel: React.FC = () => {
       const activeIndex = sortedPhotos!.findIndex(
         (photo) => photo.id === active.id
       );
-      const overIndex = sortedPhotos!.findIndex((photo) => photo.id === over?.id);
+      const overIndex = sortedPhotos!.findIndex(
+        (photo) => photo.id === over?.id
+      );
 
       setSortedPhotos((prevPhotos) =>
         arrayMove(prevPhotos!, activeIndex, overIndex)
@@ -69,82 +88,123 @@ const DragAndDropPanel: React.FC = () => {
     }
   };
 
-  const handleValidate = () => {
-    console.log("new order:", sortedPhotos);
-    // @todo: send new position (sortedPhotos) to the  source that display the galleries (photosByColor in the GalleryPhotosContext)
+  const handleValidate = async () => {
+    try {
+      const response = await axios.post("/api/photos/update-order", {
+        photoOrders: sortedPhotos,
+      });
+      // @todo: find what to display to the user once the new order is validated successfully
+      // maybe evolve and use the Modal whith a children ?
+    } catch (error) {
+      console.error("Error saving order:", error);
+    }
   };
 
-  const handleChooseGallery = () => {
-    // @todo: create a modal with the list of the colors that can be clicked
-  };
-
-  return !isLoading && sortedPhotos ? (
+  return !isLoading && photosByColor && sortedPhotos && currentColor ? (
     <Flex direction="column" gap="5">
       {/* @todo: add the color name in the title below */}
-      <h1 className={classNames("text-3xl font-bold", dragAndDropPanelStyles.thumbnailsFrame__title)}>
-        Drag and drop to reorder the red gallery
+      <h1
+        className={classNames(
+          "text-3xl font-bold",
+          dragAndDropPanelStyles.thumbnailsFrame__title
+        )}
+      >
+        Edit the {currentColor} gallery
       </h1>
-      <Flex justify="between" align="center">
-        <Button onClick={handleValidate}>Validate the new order</Button>
+      <Flex gap="4" align="center">
         <Button color="bronze" onClick={handleChooseGallery}>
           Choose another gallery
         </Button>
+        {(sortedPhotos.length === 0 && (
+          <span className="mr-5">There are no photos in this gallery</span>
+        )) ||
+          (!areArraysEqual(photosByColor, sortedPhotos) && (
+            <Button onClick={handleValidate}>Validate the new order</Button>
+          )) ||
+          null}
       </Flex>
-      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext
-          items={sortedPhotos.slice(0, 32)}
-          strategy={rectSortingStrategy}
+      {sortedPhotos.length > 0 ? (
+        <DndContext
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
         >
-          <div className={dragAndDropPanelStyles.thumbnailsFrame}>
-            <h3 className={dragAndDropPanelStyles.thumbnailsFrame__pageTitle}>
-              Page 1
-            </h3>
-            <Grid
-              columns="4"
-              className={classNames(
-                dragAndDropPanelStyles.thumbnailsFrame__page,
-                {
-                  [dragAndDropPanelStyles[
-                    "thumbnailsFrame__page--has-border-bottom"
-                  ]]: sortedPhotos.length <= 16 || sortedPhotos.length > 28,
-                }
-              )}
-            >
-              {sortedPhotos.slice(0, 32).map((photo) => (
-                <PhotoItem key={photo.id} id={photo.id} url={photo.photoUrl} />
-              ))}
-            </Grid>
-            {sortedPhotos.length > 16 && (
+          <SortableContext
+            items={sortedPhotos.slice(0, 32)}
+            strategy={rectSortingStrategy}
+          >
+            <div className={dragAndDropPanelStyles.thumbnailsFrame}>
               <h3
-                className={classNames(
-                  dragAndDropPanelStyles.thumbnailsFrame__pageSeparator,
-                  dragAndDropPanelStyles.thumbnailsFrame__pageTitle
-                )}
+                className={dragAndDropPanelStyles.thumbnailsFrame__pageTitle}
+                // @todo: use a each in the scss file to display the right color to the frame
+                style={{ backgroundColor: currentColor }}
               >
-                Page 2
+                Page 1
               </h3>
-            )}
-            {sortedPhotos.length > 16 && sortedPhotos.length <= 28 && (
-              <div
+              <Grid
+                columns="4"
                 className={classNames(
-                  dragAndDropPanelStyles.thumbnailsFrame__bottomSecondPage,
+                  dragAndDropPanelStyles.thumbnailsFrame__page,
                   {
                     [dragAndDropPanelStyles[
-                      "thumbnailsFrame__bottomSecondPage--has-1-line"
-                    ]]: sortedPhotos.length > 16 && sortedPhotos.length <= 20,
-                    [dragAndDropPanelStyles[
-                      "thumbnailsFrame__bottomSecondPage--has-2-lines"
-                    ]]: sortedPhotos.length > 20 && sortedPhotos.length <= 24,
-                    [dragAndDropPanelStyles[
-                      "thumbnailsFrame__bottomSecondPage--has-3-lines"
-                    ]]: sortedPhotos.length > 24 && sortedPhotos.length <= 28,
+                      "thumbnailsFrame__page--has-border-bottom"
+                    ]]: sortedPhotos.length <= 16 || sortedPhotos.length > 28,
                   }
                 )}
-              ></div>
-            )}
-          </div>
-        </SortableContext>
-      </DndContext>
+                // @todo: use a each in the scss file to display the right color to the frame
+                style={{
+                  borderLeftColor: currentColor,
+                  borderRightColor: currentColor,
+                }}
+              >
+                {sortedPhotos.slice(0, 32).map((photo) => (
+                  // @todo: made the photo clickable to edit their information
+                  <PhotoItem
+                    key={photo.id}
+                    id={photo.id}
+                    url={photo.photoUrl}
+                  />
+                ))}
+              </Grid>
+              {sortedPhotos.length > 16 && (
+                <h3
+                  className={classNames(
+                    dragAndDropPanelStyles.thumbnailsFrame__pageSeparator,
+                    dragAndDropPanelStyles.thumbnailsFrame__pageTitle
+                  )}
+                  // @todo: use a each in the scss file to display the right color to the frame
+                  style={{ backgroundColor: currentColor }}
+                >
+                  Page 2
+                </h3>
+              )}
+              {sortedPhotos.length > 16 && sortedPhotos.length <= 28 && (
+                <div
+                  className={classNames(
+                    dragAndDropPanelStyles.thumbnailsFrame__bottomSecondPage,
+                    {
+                      [dragAndDropPanelStyles[
+                        "thumbnailsFrame__bottomSecondPage--has-1-line"
+                      ]]: sortedPhotos.length > 16 && sortedPhotos.length <= 20,
+                      [dragAndDropPanelStyles[
+                        "thumbnailsFrame__bottomSecondPage--has-2-lines"
+                      ]]: sortedPhotos.length > 20 && sortedPhotos.length <= 24,
+                      [dragAndDropPanelStyles[
+                        "thumbnailsFrame__bottomSecondPage--has-3-lines"
+                      ]]: sortedPhotos.length > 24 && sortedPhotos.length <= 28,
+                    }
+                  )}
+                  // @todo: use a each in the scss file to display the right color to the frame
+                  style={{
+                    borderLeftColor: currentColor,
+                    borderRightColor: currentColor,
+                    borderBottomColor: currentColor,
+                  }}
+                ></div>
+              )}
+            </div>
+          </SortableContext>
+        </DndContext>
+      ) : null}
     </Flex>
   ) : null;
 };

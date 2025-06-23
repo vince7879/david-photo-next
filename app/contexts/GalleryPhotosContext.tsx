@@ -26,11 +26,18 @@ export const GalleryPhotosProvider = ({
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!color) return
+
     const fetchPhotosByColor = async () => {
       const { data } = await axios.get("/api/photos/" + color);
       // @todo: handle the redirect to 404 if color in url param is not valid
 
       setPhotosByColor(data);
+
+      // @todo: remove those 2 lines below that are created in order to make tests
+      // const { data: data2 } = await axios.get("/api/photos/");
+      // setPhotosByColor([...data2].slice(-30));
+      
       setLoading(false);
     };
 

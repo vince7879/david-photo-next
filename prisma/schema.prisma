@@ -20,6 +20,7 @@ model Photo {
   publicId  String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  order     Int?
 }
 
 enum Color {

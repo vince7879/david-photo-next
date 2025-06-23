@@ -12,9 +12,8 @@ import { signIn } from "next-auth/react"
 const Home: React.FC = () => {
   const router = useRouter();
   const handleSignIn = () => {
+    // @todo handle loader on redirect
     signIn("google", { redirectTo: "/dashboard/add-photo" })
-    // router.push(`/photos/new`);
-    // @todo handle goto signature
   };
 
   return (
