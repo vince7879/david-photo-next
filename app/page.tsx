@@ -1,19 +1,20 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import classNames from "classnames";
 import homeStyles from "@/app/styles/Home.module.scss";
 import { ColorShape } from "./components/ColorShape/ColorShape";
 import Image from "next/image";
 import { Color } from "@prisma/client";
-import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react"
+import { signIn } from "next-auth/react";
+import { Spinner } from "@radix-ui/themes";
 
 const Home: React.FC = () => {
-  const router = useRouter();
+  const [dashboardIsLoading, setDashboardIsLoading] = useState(false);
+
   const handleSignIn = () => {
-    // @todo handle loader on redirect (replace the signature with a loader?)
-    signIn("google", { redirectTo: "/dashboard/add-photo" })
+    setDashboardIsLoading(true);
+    signIn("google", { redirectTo: "/dashboard/add-photo" });
   };
 
   return (
@@ -48,14 +49,21 @@ const Home: React.FC = () => {
       {/* center green */}
       <ColorShape variant="third-horizontal-rectangle" color={Color.green} />
 
-      <div className={classNames(homeStyles.shape, homeStyles.signature)} onClick={() => handleSignIn()}>
-        <Image
-          src="/images/sign.png"
-          alt="signature"
-          width={140}
-          height={50}
-          className="object-contain"
-        />
+      <div
+        className={classNames(homeStyles.shape, homeStyles.signature)}
+        onClick={handleSignIn}
+      >
+        {dashboardIsLoading ? (
+          <Spinner size="3" className={homeStyles.spinner} />
+        ) : (
+          <Image
+            src="/images/sign.png"
+            alt="signature"
+            width={140}
+            height={50}
+            className="object-contain"
+          />
+        )}
       </div>
 
       {/* big blue */}
