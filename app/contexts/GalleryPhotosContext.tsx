@@ -12,7 +12,7 @@ interface IContext {
 
 const GalleryPhotosContext = createContext<IContext>({
   photosByColor: undefined,
-  isLoading: true,
+  isLoading: false,
 });
 
 interface IProvider {
@@ -23,10 +23,12 @@ export const GalleryPhotosProvider = ({
   children,
 }: PropsWithChildren<IProvider>) => {
   const [photosByColor, setPhotosByColor] = useState<IContext['photosByColor']>();
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!color) return
+    setIsLoading(true)
+    setPhotosByColor(undefined)
 
     const fetchPhotosByColor = async () => {
       const { data } = await axios.get("/api/photos/" + color);
@@ -38,7 +40,7 @@ export const GalleryPhotosProvider = ({
       // const { data: data2 } = await axios.get("/api/photos/");
       // setPhotosByColor([...data2].slice(-30));
       
-      setLoading(false);
+      setIsLoading(false);
     };
 
     fetchPhotosByColor();
@@ -58,5 +60,5 @@ export const GalleryPhotosProvider = ({
 
 export const usePhotosByColorData = () =>
   useContextSelector(GalleryPhotosContext, (state) => state.photosByColor);
-export const useGalleryPhotosLoadingSelector = () =>
+export const useGalleryPhotosIsLoadingSelector = () =>
   useContextSelector(GalleryPhotosContext, (state) => state.isLoading);

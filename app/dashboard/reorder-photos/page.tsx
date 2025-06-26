@@ -1,12 +1,11 @@
 "use client";
 
-import { GalleryPhotosProvider } from "@/app/contexts/GalleryPhotosContext";
+import { GalleryPhotosProvider, useGalleryPhotosIsLoadingSelector, useGalleryPhotosSetIsLoadingSelector, usePhotosByColorData } from "@/app/contexts/GalleryPhotosContext";
 import React, { useEffect, useState } from "react";
 import DragAndDropPanel from "./DragAndDropPanel";
 import NavBarDashboard from "@/app/components/NavBar/NavBarDashboard/NavBarDashboard";
 import Modal from "./Modal";
 import { Color } from "@prisma/client";
-
 
 const ReorderPhotosPage: React.FC = () => {
   const [showModal, setShowModal] = useState(true);
@@ -14,12 +13,9 @@ const ReorderPhotosPage: React.FC = () => {
 
   const handleChoice = (colorChoice: Color) => {
     setUserColorChoice(colorChoice);
+    setShowModal(false)
   };
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-  
   const handleChooseGallery = () => {
     setShowModal(true);
   };
@@ -27,10 +23,17 @@ const ReorderPhotosPage: React.FC = () => {
   return (
     <>
       <Modal
-        show={showModal}
-        onClose={handleCloseModal}
-        onChoose={handleChoice}
-      />
+        isShown={showModal}
+        title="Choose a color to edit"
+      >
+        {Object.values(Color).map((color) => (
+          // @todo: style the color buttons in the modal
+          <button key={color} onClick={() => handleChoice(color)}>
+            {color}
+          </button>
+        ))}
+      </Modal>
+
       <GalleryPhotosProvider color={userColorChoice!}>
         <aside>
           <NavBarDashboard />

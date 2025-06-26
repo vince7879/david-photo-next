@@ -12,7 +12,7 @@ import { signIn } from "next-auth/react"
 const Home: React.FC = () => {
   const router = useRouter();
   const handleSignIn = () => {
-    // @todo handle loader on redirect
+    // @todo handle loader on redirect (replace the signature with a loader?)
     signIn("google", { redirectTo: "/dashboard/add-photo" })
   };
 

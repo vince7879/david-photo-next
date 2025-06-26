@@ -9,12 +9,9 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import {
-  useGalleryPhotosLoadingSelector,
-  usePhotosByColorData,
-} from "@/app/contexts/GalleryPhotosContext";
+import { usePhotosByColorData } from "@/app/contexts/GalleryPhotosContext";
 import Image from "next/image";
-import { Button, Flex, Grid } from "@radix-ui/themes";
+import { Button, Flex, Grid, Skeleton } from "@radix-ui/themes";
 import dragAndDropPanelStyles from "./DragAndDropPanel.module.scss";
 import classNames from "classnames";
 import { Photo } from "@prisma/client";
@@ -61,14 +58,13 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
   handleChooseGallery,
 }) => {
   const photosByColor = usePhotosByColorData();
-  const isLoading = useGalleryPhotosLoadingSelector();
 
-  const [sortedPhotos, setSortedPhotos] = useState(photosByColor);
+  const [sortedPhotos, setSortedPhotos] = useState<Photo[] | undefined>(
+    photosByColor
+  );
 
   useEffect(() => {
-    if (photosByColor) {
-      setSortedPhotos(photosByColor);
-    }
+    setSortedPhotos(photosByColor);
   }, [photosByColor]);
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -100,7 +96,7 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
     }
   };
 
-  return !isLoading && photosByColor && sortedPhotos && currentColor ? (
+  return photosByColor && sortedPhotos && currentColor ? (
     <Flex direction="column" gap="5">
       {/* @todo: add the color name in the title below */}
       <h1

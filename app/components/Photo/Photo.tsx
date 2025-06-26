@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Skeleton, Text } from "@radix-ui/themes";
 import { rgbDataURL } from "@/app/constants/placeholderImage";
 import {
-  useGalleryPhotosLoadingSelector,
+  useGalleryPhotosIsLoadingSelector,
   usePhotosByColorData,
 } from "@/app/contexts/GalleryPhotosContext";
 import photoStyles from "./Photo.module.scss";
@@ -17,7 +17,7 @@ interface PhotoProps {
 
 const Photo: React.FC<PhotoProps> = ({ id }) => {
   const photosByColor = usePhotosByColorData();
-  const isLoading = useGalleryPhotosLoadingSelector();
+  const isLoading = useGalleryPhotosIsLoadingSelector();
   const [imageIsLoading, setImageIsLoading] = useState(true);
 
   const photo = photosByColor?.find((photo) => photo.publicId === id);

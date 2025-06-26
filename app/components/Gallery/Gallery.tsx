@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Grid, Skeleton } from "@radix-ui/themes";
 import classNames from "classnames";
 import { useRouter } from "next/navigation";
-import { useGalleryPhotosLoadingSelector, usePhotosByColorData } from "@/app/contexts/GalleryPhotosContext";
+import { useGalleryPhotosIsLoadingSelector, usePhotosByColorData } from "@/app/contexts/GalleryPhotosContext";
 import { Photo } from "@prisma/client"
 
 interface GalleryProps {
@@ -17,7 +17,7 @@ const Gallery: React.FC<GalleryProps> = ({ currentColor }) => {
   const router = useRouter();
   const [page, setPage] = useState<1 | 2>(2);
   const photosByColor = usePhotosByColorData()
-  const isLoading = useGalleryPhotosLoadingSelector()
+  const isLoading = useGalleryPhotosIsLoadingSelector()
 
   const handlePagination = () => {
     page === 2 ? setPage(1) : setPage(2);
