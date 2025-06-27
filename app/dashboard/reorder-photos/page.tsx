@@ -1,10 +1,10 @@
 "use client";
 
-import { GalleryPhotosProvider, useGalleryPhotosIsLoadingSelector, useGalleryPhotosSetIsLoadingSelector, usePhotosByColorData } from "@/app/contexts/GalleryPhotosContext";
-import React, { useEffect, useState } from "react";
+import { GalleryPhotosProvider } from "@/app/contexts/GalleryPhotosContext";
+import React, { useState } from "react";
 import DragAndDropPanel from "./DragAndDropPanel";
 import NavBarDashboard from "@/app/components/NavBar/NavBarDashboard/NavBarDashboard";
-import Modal from "./Modal";
+import Modal from "@/app/components/Modal/Modal";
 import { Color } from "@prisma/client";
 
 const ReorderPhotosPage: React.FC = () => {

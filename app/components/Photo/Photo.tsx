@@ -25,7 +25,7 @@ const Photo: React.FC<PhotoProps> = ({ id }) => {
     photo && photo.place.charAt(0).toUpperCase() + photo.place.slice(1)
   }, ${photo?.month.toLowerCase()} ${photo?.year}`;
 
-  return isLoading ? (
+  return isLoading || !photo ? (
     <Skeleton
       width={{ initial: "478px", md: "735px", lg: "1000px" }}
       height={{ initial: "318px", md: "490px", lg: "670px" }}
@@ -33,7 +33,7 @@ const Photo: React.FC<PhotoProps> = ({ id }) => {
   ) : (
     <div>
       <Image
-        src={photo!.photoUrl}
+        src={photo.photoUrl}
         alt={legend}
         width={1000}
         height={670}

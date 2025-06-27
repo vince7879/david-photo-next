@@ -1,3 +1,18 @@
+$gallery-codes: (
+  'black': #000,
+  "white": #EBEBEB,
+  "blackwhite": #EBEBEB,
+  "brown": #622f16,
+  "yellow": #E5C55E,
+  "red": #DC0A0B,
+  "purple": #A3307D,
+  "green": #267C3F,
+  "blue": #1a1e7c,
+  "grey": #6F787D,
+  "orange": #E67B22,
+  "recent": #FF7F50,
+);
+
 .thumbnailsFrame {
   --inner-length: 550px;
   --border-size: 25px;
@@ -6,13 +21,29 @@
   
   &__page {
     width: var(--inner-length);
-    border-left: var(--border-size) solid var(--red);
-    border-right: var(--border-size) solid var(--red);
     grid-template-rows: repeat(4, minmax(0, 1fr));
     box-sizing: content-box;
 
-    &--has-border-bottom {
-      border-bottom: var(--border-size) solid var(--red);
+    @each $gallery-color, $color-hex-code in $gallery-codes {
+      &--#{$gallery-color} {
+        border-left: var(--border-size) solid #{$color-hex-code};
+        border-right: var(--border-size) solid #{$color-hex-code};
+
+        @if ($gallery-color == 'black') {
+          border-left: var(--border-size) solid var(--white);
+          border-right: var(--border-size) solid var(--white);
+        }
+      }
+    }
+
+    @each $gallery-color, $color-hex-code in $gallery-codes {
+      &--has-#{$gallery-color}-border-bottom {
+        border-bottom: var(--border-size) solid #{$color-hex-code};
+
+        @if ($gallery-color == 'black') {
+          border-bottom: var(--border-size) solid var(--white);
+        }
+      }
     }
   }
 
@@ -29,23 +60,57 @@
   &__pageSeparator {
     position: absolute;
     top: 562px;
+
+    @each $gallery-color, $color-hex-code in $gallery-codes {
+      &--#{$gallery-color} {
+        background-color: #{$color-hex-code};
+        
+        @if ($gallery-color == 'black') {
+          background-color: var(--border-size) solid var(--white);
+        }
+      }
+    }
   }
   
   &__pageTitle {
     text-align: center;
     font-weight: bold;
     width: 100%;
-    background-color: var(--red);
+    
+    @each $gallery-color, $color-hex-code in $gallery-codes {
+      &--#{$gallery-color} {
+        background-color: #{$color-hex-code};
+        
+        @if ($gallery-color == 'black') {
+          background-color: var(--white);
+        }
+
+        @if ($gallery-color == 'white' or $gallery-color == 'black' or $gallery-color == 'blackwhite' or $gallery-color == 'yellow') {
+          color: #000;
+        }
+      }
+    }
   }
 
   &__bottomSecondPage {
     position: absolute;
     width: 100%;
-    border-left: var(--border-size) solid var(--red);
-    border-right: var(--border-size) solid var(--red);
-    border-bottom: var(--border-size) solid var(--red);
     height: var(--inner-length);
     bottom: -460px;
+
+    @each $gallery-color, $color-hex-code in $gallery-codes {
+      &--#{$gallery-color} {
+        border-left: var(--border-size) solid #{$color-hex-code};
+        border-right: var(--border-size) solid #{$color-hex-code};
+        border-bottom: var(--border-size) solid #{$color-hex-code};
+      }
+
+      @if ($gallery-color == 'black') {
+        border-left: var(--border-size) solid var(--white);
+        border-right: var(--border-size) solid var(--white);
+        border-bottom: var(--border-size) solid var(--white);
+      }
+    }
 
     &--has-1-line {
       bottom: -440px;

@@ -2,7 +2,7 @@ import React from "react";
 import navBarStyles from "../NavBar.module.scss";
 import Link from "next/link";
 import Image from "next/image";
-import { ColorSquare } from "../../ColorSquare/ColorSquare";
+import { ColorSquare } from "@/app/components/ColorSquare/ColorSquare";
 import { usePhotosByColorData } from "@/app/contexts/GalleryPhotosContext";
 import { Photo } from "@prisma/client"
 

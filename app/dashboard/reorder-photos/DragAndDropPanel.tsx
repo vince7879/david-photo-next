@@ -98,14 +98,13 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
 
   return photosByColor && sortedPhotos && currentColor ? (
     <Flex direction="column" gap="5">
-      {/* @todo: add the color name in the title below */}
       <h1
         className={classNames(
           "text-3xl font-bold",
           dragAndDropPanelStyles.thumbnailsFrame__title
         )}
       >
-        Edit the {currentColor} gallery
+        Edit the {currentColor === 'blackwhite' ? 'black and white' : currentColor} gallery
       </h1>
       <Flex gap="4" align="center">
         <Button color="bronze" onClick={handleChooseGallery}>
@@ -130,9 +129,14 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
           >
             <div className={dragAndDropPanelStyles.thumbnailsFrame}>
               <h3
-                className={dragAndDropPanelStyles.thumbnailsFrame__pageTitle}
-                // @todo: use a each in the scss file to display the right color to the frame
-                style={{ backgroundColor: currentColor }}
+                className={classNames(
+                  dragAndDropPanelStyles.thumbnailsFrame__pageTitle,
+                  {
+                    [dragAndDropPanelStyles[
+                      `thumbnailsFrame__pageTitle--${currentColor}`
+                    ]]: currentColor,
+                  }
+                )}
               >
                 Page 1
               </h3>
@@ -142,15 +146,13 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
                   dragAndDropPanelStyles.thumbnailsFrame__page,
                   {
                     [dragAndDropPanelStyles[
-                      "thumbnailsFrame__page--has-border-bottom"
+                      `thumbnailsFrame__page--${currentColor}`
+                    ]]: currentColor,
+                    [dragAndDropPanelStyles[
+                      `thumbnailsFrame__page--has-${currentColor}-border-bottom`
                     ]]: sortedPhotos.length <= 16 || sortedPhotos.length > 28,
                   }
                 )}
-                // @todo: use a each in the scss file to display the right color to the frame
-                style={{
-                  borderLeftColor: currentColor,
-                  borderRightColor: currentColor,
-                }}
               >
                 {sortedPhotos.slice(0, 32).map((photo) => (
                   // @todo: made the photo clickable to edit their information
@@ -165,10 +167,13 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
                 <h3
                   className={classNames(
                     dragAndDropPanelStyles.thumbnailsFrame__pageSeparator,
-                    dragAndDropPanelStyles.thumbnailsFrame__pageTitle
+                    dragAndDropPanelStyles.thumbnailsFrame__pageTitle,
+                    {
+                      [dragAndDropPanelStyles[
+                        `thumbnailsFrame__pageSeparator--${currentColor}`
+                      ]]: currentColor,
+                    }
                   )}
-                  // @todo: use a each in the scss file to display the right color to the frame
-                  style={{ backgroundColor: currentColor }}
                 >
                   Page 2
                 </h3>
@@ -178,6 +183,9 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
                   className={classNames(
                     dragAndDropPanelStyles.thumbnailsFrame__bottomSecondPage,
                     {
+                      [dragAndDropPanelStyles[
+                        `thumbnailsFrame__bottomSecondPage--${currentColor}`
+                      ]]: currentColor,
                       [dragAndDropPanelStyles[
                         "thumbnailsFrame__bottomSecondPage--has-1-line"
                       ]]: sortedPhotos.length > 16 && sortedPhotos.length <= 20,
@@ -189,12 +197,6 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
                       ]]: sortedPhotos.length > 24 && sortedPhotos.length <= 28,
                     }
                   )}
-                  // @todo: use a each in the scss file to display the right color to the frame
-                  style={{
-                    borderLeftColor: currentColor,
-                    borderRightColor: currentColor,
-                    borderBottomColor: currentColor,
-                  }}
                 ></div>
               )}
             </div>
