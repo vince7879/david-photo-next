@@ -3,13 +3,7 @@
 }
 
 .navBarDashboard {
-    > a, > button {
-        &:hover {
-            > svg {
-                > path {
-                    fill: grey;
-                }
-            }
-        }
+    &__toolButton {
+        color: #fff;
     }
 }
