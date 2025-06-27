@@ -1,4 +1,5 @@
 import React from "react";
+import navBarStyles from "../NavBar.module.scss";
 import Link from "next/link";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
@@ -10,7 +11,7 @@ import { ExitIcon, ImageIcon, MoveIcon } from "@radix-ui/react-icons"
 
 // @todo: move the navbar into the page where it's used if it's not used in multiple places
 const NavBarDashboard: React.FC = () => (
-  <nav className={`flex flex-col justify-between items-center`}>
+  <nav className={`flex flex-col justify-between items-center ${navBarStyles.navBarDashboard}`}>
   {/* mini-mondrian to go to the homepage */}
   <Link href="/" className="mb-6">
     <Image

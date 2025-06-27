@@ -1,3 +1,15 @@
 .navBar {
     height: var(--main-square-border);
 }
+
+.navBarDashboard {
+    > a, > button {
+        &:hover {
+            > svg {
+                > path {
+                    fill: grey;
+                }
+            }
+        }
+    }
+}
