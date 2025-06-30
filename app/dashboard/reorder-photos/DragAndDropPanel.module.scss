@@ -55,7 +55,11 @@ $gallery-codes: (
     object-fit: contain;
     padding: 20px;
     contain: strict;
-}
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
 
   &__pageSeparator {
     position: absolute;
@@ -127,4 +131,8 @@ $gallery-codes: (
       height: 165px;
     }
   }
+}
+
+.modal {
+  justify-items: center;
 }

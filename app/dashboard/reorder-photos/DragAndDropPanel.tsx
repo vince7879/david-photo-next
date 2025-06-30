@@ -90,7 +90,7 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
         photoOrders: sortedPhotos,
       });
       // @todo: find what to display to the user once the new order is validated successfully
-      // maybe evolve and use the Modal whith a children ?
+      // maybe evolve and use the Modal whith a children? just a tiny msg next to the button?
     } catch (error) {
       console.error("Error saving order:", error);
     }
@@ -128,6 +128,7 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
             strategy={rectSortingStrategy}
           >
             <div className={dragAndDropPanelStyles.thumbnailsFrame}>
+              {/* @todo: hide "Page 1" if there are not more than 16 photos  */}
               <h3
                 className={classNames(
                   dragAndDropPanelStyles.thumbnailsFrame__pageTitle,
