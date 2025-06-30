@@ -11,16 +11,17 @@ datasource db {
 }
 
 model Photo {
-  id        Int      @id @default(autoincrement())
-  place     String
-  month     String
-  year      String
-  color     Color
-  photoUrl  String
-  publicId  String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  order     Int?
+  id         Int      @id @default(autoincrement())
+  place      String
+  month      String
+  year       String
+  color      Color
+  photoUrl   String
+  publicId   String   @unique
+  isPortrait Boolean?
+  order      Int?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 enum Color {

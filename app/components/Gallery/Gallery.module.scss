@@ -12,13 +12,32 @@
   grid-template-rows: repeat(4, minmax(0, 1fr));;
 
   &__thumbnail {
-    object-fit: contain;
-    padding: 20px;
+    display: flex;
+    margin: auto;
+    width: 70%;
     transition: 0.3s;
+    position: relative;
 
     &:hover {
-      padding: 0;
+      width: 100%;
       cursor: pointer;
+      z-index: 2;
+    }
+
+    &--is-portrait {
+      width: 50%;
+
+      &:hover {
+        width: 80%;
+      }
+    }
+
+    img {
+      border: 1px solid #fff;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
   }
 }

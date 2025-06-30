@@ -43,6 +43,7 @@ const AddPhotoPage = () => {
   const [photoPreview, setPhotoPreview] = useState<string | null | undefined>(
     null
   );
+  const [isPortrait, setIsPortrait] = useState<boolean | null>(null);
 
   const {
     register,
@@ -81,12 +82,21 @@ const AddPhotoPage = () => {
         // ); // smaller than maxSizeMB
 
         if (compressedPhoto) {
-          setPhoto(compressedPhoto);
           const reader = new FileReader();
+
           reader.onload = (e) => {
-            setPhotoPreview(e.target?.result as string);
+            const result = e.target?.result as string;
+            setPhotoPreview(result);
+            setPhoto(compressedPhoto);
+  
+            const img = new window.Image();
+            img.onload = () => {
+              setIsPortrait(img.height > img.width + (img.height * 0.1));
+            };
+            img.src = result;
           };
-          reader.readAsDataURL(compressedPhoto); // Reads the file as a data URL (base64)
+  
+          reader.readAsDataURL(compressedPhoto);
         }
       } catch (error) {
         console.log(error);
@@ -121,6 +131,7 @@ const AddPhotoPage = () => {
         ...data,
         photoUrl: photoUploadResult.secure_url,
         publicId: photoUploadResult.public_id,
+        isPortrait
       };
 
       await axios.post("/api/photos", payload);
@@ -215,7 +226,7 @@ const AddPhotoPage = () => {
                       <Select.Content position="popper">
                         {Object.values(Color).map((color) => (
                           <Select.Item key={color} value={color}>
-                            {color === 'blackwhite' ? 'black & white' : color}
+                            {color === 'blackwhite' ? 'black and white' : color}
                           </Select.Item>
                         ))}
                       </Select.Content>

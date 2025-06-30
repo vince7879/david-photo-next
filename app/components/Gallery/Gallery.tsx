@@ -6,24 +6,30 @@ import Image from "next/image";
 import { Grid, Skeleton } from "@radix-ui/themes";
 import classNames from "classnames";
 import { useRouter } from "next/navigation";
-import { useGalleryPhotosIsLoadingSelector, usePhotosByColorData } from "@/app/contexts/GalleryPhotosContext";
-import { Photo } from "@prisma/client"
+import {
+  useGalleryPhotosIsLoadingSelector,
+  usePhotosByColorData,
+} from "@/app/contexts/GalleryPhotosContext";
+import { Photo } from "@prisma/client";
 
 interface GalleryProps {
-  currentColor: Photo['color'];
+  currentColor: Photo["color"];
 }
 
 const Gallery: React.FC<GalleryProps> = ({ currentColor }) => {
   const router = useRouter();
   const [page, setPage] = useState<1 | 2>(2);
-  const photosByColor = usePhotosByColorData()
-  const isLoading = useGalleryPhotosIsLoadingSelector()
+  const photosByColor = usePhotosByColorData();
+  const isLoading = useGalleryPhotosIsLoadingSelector();
 
   const handlePagination = () => {
     page === 2 ? setPage(1) : setPage(2);
   };
 
-  const handleClickThumbnail = (color: Photo['color'], id: Photo['publicId']) => {
+  const handleClickThumbnail = (
+    color: Photo["color"],
+    id: Photo["publicId"]
+  ) => {
     router.push(`/gallery/${color}/photo/${id}`);
   };
 
@@ -52,19 +58,30 @@ const Gallery: React.FC<GalleryProps> = ({ currentColor }) => {
                 style={{ placeSelf: "center" }}
               />
             ))
-          : photosByColor?.slice(page === 2 ? 0 : 16, page === 2 ? 16 : 32)
+          : photosByColor
+              ?.slice(page === 2 ? 0 : 16, page === 2 ? 16 : 32)
               .map((photo) => (
-                <Image
+                <div
                   key={photo.id}
-                  src={photo.photoUrl}
-                  alt={photo.place}
-                  width={200}
-                  height={200}
-                  className={galleryStyles.thumbnailsFrame__thumbnail}
-                  onClick={() =>
-                    handleClickThumbnail(currentColor, photo.publicId)
-                  }
-                />
+                  className={classNames(
+                    galleryStyles.thumbnailsFrame__thumbnail,
+                    {
+                      [galleryStyles[
+                        `thumbnailsFrame__thumbnail--is-portrait`
+                      ]]: photo.isPortrait,
+                    }
+                  )}
+                >
+                  <Image
+                    src={photo.photoUrl}
+                    alt={photo.place}
+                    width={200}
+                    height={200}
+                    onClick={() =>
+                      handleClickThumbnail(currentColor, photo.publicId)
+                    }
+                  />
+                </div>
               ))}
       </Grid>
     </section>
