@@ -13,6 +13,7 @@ import Image from "next/image";
 import imageCompression from "browser-image-compression";
 import { Color, Photo } from "@prisma/client";
 import NavBarDashboard from "@/app/components/NavBar/NavBarDashboard/NavBarDashboard";
+import DeletePhotoButton from "./DeletePhotoButton";
 
 type PhotoFormData = z.infer<typeof createPhotoSchema>;
 
@@ -273,6 +274,7 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
               {photoData ? "Update Photo" : "Submit New Photo"}{" "}
               {isSubmitting && <Spinner />}
             </Button>
+            {photoData && <DeletePhotoButton photoId={photoData.publicId} ml='5' />}
           </form>
           {submitMessage && (
             <Callout.Root color={submitMessage.includes("success") ? "green" : "red"} className="mt-5">
