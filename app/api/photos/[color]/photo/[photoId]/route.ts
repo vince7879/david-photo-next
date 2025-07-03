@@ -12,8 +12,9 @@ export async function GET(request: NextRequest, { params }: PhotoPageProps) {
 }
 
 export async function PATCH(request: NextRequest, { params }: PhotoPageProps) {
-  const body = await request.json();
   const { color, photoId } = params;
+  const body = await request.json();
+
   const photo = await prisma.photo.findUnique({
     where: { publicId: photoId, color },
   });
@@ -32,4 +33,21 @@ export async function PATCH(request: NextRequest, { params }: PhotoPageProps) {
   });
 
   return NextResponse.json(updatedPhoto);
+}
+
+export async function DELETE(request: NextRequest, { params }: PhotoPageProps) {
+  const { color, photoId } = params;
+
+  const photo = await prisma.photo.findUnique({
+    where: { publicId: photoId, color },
+  });
+
+  if (!photo)
+    return NextResponse.json({ error: "Invalid photo" }, { status: 404 });
+
+  await prisma.photo.delete({
+    where: { id: photo.id },
+  });
+
+  return NextResponse.json({});
 }
