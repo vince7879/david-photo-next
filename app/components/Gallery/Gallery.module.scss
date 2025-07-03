@@ -9,7 +9,7 @@
   border: 2px solid var(--white);
   margin: calc(var(--inner-length) / -2) 0 0 calc(var(--inner-length) / -2);
   background-color: var(--black);
-  grid-template-rows: repeat(4, minmax(0, 1fr));;
+  grid-template-rows: repeat(4, minmax(0, 1fr));
 
   &__thumbnail {
     display: flex;
@@ -55,4 +55,16 @@
   font-family: revert;
   cursor: pointer;
   user-select: none;
+}
+
+.modalButton {
+  position: absolute;
+  color: #fff;
+  top: -2px;
+  left: -2px;
+
+  &:hover {
+    background-color: unset;
+    cursor: pointer;
+  }
 }

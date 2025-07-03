@@ -18,6 +18,7 @@ import { Photo } from "@prisma/client";
 import { Color } from "@prisma/client";
 import { areArraysEqual } from "@/app/helpers/arrayHelper";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 interface DragAndDropPanelProps {
   currentColor: Color | null;
@@ -28,9 +29,11 @@ interface DragAndDropPanelProps {
 const PhotoItem = ({
   id,
   url,
+  onClickThumbnail,
 }: {
   id: Photo["id"];
   url: Photo["photoUrl"];
+  onClickThumbnail?: () => void;
 }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
@@ -48,6 +51,7 @@ const PhotoItem = ({
         width={200}
         height={200}
         className={dragAndDropPanelStyles.thumbnailsFrame__thumbnail}
+        onClick={onClickThumbnail}
       />
     </div>
   );
@@ -58,6 +62,7 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
   handleChooseGallery,
 }) => {
   const photosByColor = usePhotosByColorData();
+  const router = useRouter();
 
   const [sortedPhotos, setSortedPhotos] = useState<Photo[] | undefined>(
     photosByColor
@@ -104,7 +109,9 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
           dragAndDropPanelStyles.thumbnailsFrame__title
         )}
       >
-        Edit the {currentColor === 'blackwhite' ? 'black and white' : currentColor} gallery
+        Reorder the{" "}
+        {currentColor === "blackwhite" ? "black and white" : currentColor}{" "}
+        gallery
       </h1>
       <Flex gap="4" align="center">
         <Button color="bronze" onClick={handleChooseGallery}>
@@ -156,7 +163,6 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
                 )}
               >
                 {sortedPhotos.slice(0, 32).map((photo) => (
-                  // @todo: made the photo clickable to edit their information
                   <PhotoItem
                     key={photo.id}
                     id={photo.id}

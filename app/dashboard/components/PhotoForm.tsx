@@ -1,15 +1,9 @@
 "use client";
 
-import {
-  Button,
-  Callout,
-  Flex,
-  Select,
-  TextField,
-} from "@radix-ui/themes";
+import { Button, Callout, Flex, Select, TextField } from "@radix-ui/themes";
 import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createPhotoSchema } from "@/app/validationSchemas";
 import { z } from "zod";
@@ -17,12 +11,16 @@ import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
 import Image from "next/image";
 import imageCompression from "browser-image-compression";
-import { Color } from "@prisma/client";
+import { Color, Photo } from "@prisma/client";
 import NavBarDashboard from "@/app/components/NavBar/NavBarDashboard/NavBarDashboard";
 
-type PhotoForm = z.infer<typeof createPhotoSchema>;
+type PhotoFormData = z.infer<typeof createPhotoSchema>;
 
-const AddPhotoPage = () => {
+interface PhotoFormProps {
+  photoData?: Photo;
+}
+
+const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
   // @todo: to move to a global constant file
   const months = [
     "January",
@@ -40,10 +38,12 @@ const AddPhotoPage = () => {
   ];
 
   const [photo, setPhoto] = useState<File | null>(null);
+  console.log("🚀 ~ photo:", photo);
   const [photoPreview, setPhotoPreview] = useState<string | null | undefined>(
     null
   );
   const [isPortrait, setIsPortrait] = useState<boolean | null>(null);
+  console.log("🚀 ~ isPortrait:", isPortrait);
 
   const {
     register,
@@ -51,11 +51,15 @@ const AddPhotoPage = () => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<PhotoForm>({
+  } = useForm<PhotoFormData>({
     resolver: zodResolver(createPhotoSchema),
   });
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    setPhotoPreview(photoData?.photoUrl);
+  }, [photoData?.photoUrl]);
 
   const handleFileSelect = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -88,14 +92,14 @@ const AddPhotoPage = () => {
             const result = e.target?.result as string;
             setPhotoPreview(result);
             setPhoto(compressedPhoto);
-  
+
             const img = new window.Image();
             img.onload = () => {
-              setIsPortrait(img.height > img.width + (img.height * 0.1));
+              setIsPortrait(img.height > img.width + img.height * 0.1);
             };
             img.src = result;
           };
-  
+
           reader.readAsDataURL(compressedPhoto);
         }
       } catch (error) {
@@ -109,38 +113,50 @@ const AddPhotoPage = () => {
 
     try {
       const formData = new FormData();
+      let photoUploadResult;
 
-      if (photo) {
-        formData.append("file", photo);
-        formData.append("upload_preset", "x2bx90y9");
+      if (!photoData) {
+        if (photo) {
+          formData.append("file", photo);
+          formData.append("upload_preset", "x2bx90y9");
+        }
+
+        const cloudinaryResponse = await axios.post(
+          "https://api.cloudinary.com/v1_1/dnaf0ui17/image/upload",
+          formData
+        );
+
+        if (cloudinaryResponse.status !== 200) {
+          throw new Error("Photo upload failed");
+        }
+
+        photoUploadResult = await cloudinaryResponse.data;
       }
 
-      const cloudinaryResponse = await axios.post(
-        "https://api.cloudinary.com/v1_1/dnaf0ui17/image/upload",
-        formData
-      );
-
-      if (cloudinaryResponse.status !== 200) {
-        throw new Error("Photo upload failed");
-      }
-
-      const photoUploadResult = await cloudinaryResponse.data;
-
-      // Add the uploaded photo url to the form data
+      // Add the uploaded photo and its format to the payload
       const payload = {
         ...data,
-        photoUrl: photoUploadResult.secure_url,
-        publicId: photoUploadResult.public_id,
-        isPortrait
+        ...(!photoData && {
+          photoUrl: photoUploadResult.secure_url,
+          publicId: photoUploadResult.public_id,
+          isPortrait,
+        }),
       };
 
-      await axios.post("/api/photos", payload);
+      if (photoData) {
+        await axios.patch(
+          `/api/photos/${photoData.color}/photo/${photoData.publicId}`,
+          data
+        );
+      } else {
+        await axios.post("/api/photos", payload);
+      }
 
       reset();
       setPhotoPreview(null);
       // @todo: change color alert when it's a success
       // @todo: remove the message as soon as an input is touch
-      setError("photo added successfully !");
+      setError(`photo ${photoData ? "updated" : "added"} successfully!`);
     } catch (error) {
       setError("An unexpected error occured.");
     } finally {
@@ -155,9 +171,15 @@ const AddPhotoPage = () => {
       </aside>
       <div className="flex gap-4 items-start">
         <div className="max-w-xl">
-          <h1 className="mb-5 text-3xl font-bold">Add a photo</h1>
+          <h1 className="mb-5 text-3xl font-bold">
+            {photoData ? "Edit the photo" : "Add a new photo"}
+          </h1>
           <form className="max-w-xl space-y-3" onSubmit={onSubmit}>
-            <TextField.Root placeholder="Place" {...register("place")} />
+            <TextField.Root
+              defaultValue={photoData?.place}
+              placeholder="Place"
+              {...register("place")}
+            />
             <ErrorMessage>{errors.place?.message}</ErrorMessage>
             {/* rework spacing between selects and submit btn */}
             <Flex>
@@ -165,6 +187,7 @@ const AddPhotoPage = () => {
                 <Controller
                   name="year"
                   control={control}
+                  defaultValue={photoData?.year}
                   render={({ field }) => (
                     <Select.Root
                       {...field}
@@ -193,6 +216,7 @@ const AddPhotoPage = () => {
                 <Controller
                   name="month"
                   control={control}
+                  defaultValue={photoData?.month}
                   render={({ field }) => (
                     <Select.Root
                       {...field}
@@ -216,6 +240,8 @@ const AddPhotoPage = () => {
                 <Controller
                   name="color"
                   control={control}
+                  // @todo: fix when a photo is updated the dropdown displays the old one
+                  defaultValue={photoData?.color}
                   render={({ field }) => (
                     <Select.Root
                       {...field}
@@ -226,7 +252,7 @@ const AddPhotoPage = () => {
                       <Select.Content position="popper">
                         {Object.values(Color).map((color) => (
                           <Select.Item key={color} value={color}>
-                            {color === 'blackwhite' ? 'black and white' : color}
+                            {color === "blackwhite" ? "black and white" : color}
                           </Select.Item>
                         ))}
                       </Select.Content>
@@ -236,11 +262,18 @@ const AddPhotoPage = () => {
                 <ErrorMessage>{errors.color?.message}</ErrorMessage>
               </div>
             </Flex>
-            <div>
-              <input type="file" accept="image/*" onChange={handleFileSelect} />
-            </div>
+            {!photoData && (
+              <div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileSelect}
+                />
+              </div>
+            )}
             <Button disabled={isSubmitting} className="my-3">
-              Submit New Photo {isSubmitting && <Spinner />}
+              {photoData ? "Update Photo" : "Submit New Photo"}{" "}
+              {isSubmitting && <Spinner />}
             </Button>
           </form>
           {error && (
@@ -263,4 +296,4 @@ const AddPhotoPage = () => {
   );
 };
 
-export default AddPhotoPage;
+export default PhotoForm;

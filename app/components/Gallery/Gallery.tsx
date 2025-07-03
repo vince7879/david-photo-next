@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import galleryStyles from "./Gallery.module.scss";
 import Image from "next/image";
-import { Grid, Skeleton } from "@radix-ui/themes";
+import { Grid, IconButton, Skeleton } from "@radix-ui/themes";
 import classNames from "classnames";
 import { useRouter } from "next/navigation";
 import {
@@ -11,16 +11,23 @@ import {
   usePhotosByColorData,
 } from "@/app/contexts/GalleryPhotosContext";
 import { Photo } from "@prisma/client";
+import { usePathname } from "next/navigation";
+import { DashboardIcon } from "@radix-ui/react-icons";
 
 interface GalleryProps {
-  currentColor: Photo["color"];
+  currentColor?: Photo["color"];
+  handleChangeGallery?: () => void;
 }
 
-const Gallery: React.FC<GalleryProps> = ({ currentColor }) => {
+const Gallery: React.FC<GalleryProps> = ({
+  currentColor,
+  handleChangeGallery,
+}) => {
   const router = useRouter();
   const [page, setPage] = useState<1 | 2>(2);
   const photosByColor = usePhotosByColorData();
   const isLoading = useGalleryPhotosIsLoadingSelector();
+  const pathname = usePathname();
 
   const handlePagination = () => {
     page === 2 ? setPage(1) : setPage(2);
@@ -30,15 +37,27 @@ const Gallery: React.FC<GalleryProps> = ({ currentColor }) => {
     color: Photo["color"],
     id: Photo["publicId"]
   ) => {
-    router.push(`/gallery/${color}/photo/${id}`);
+    if (pathname.includes("edit"))
+      router.push(`/gallery/${color}/photo/${id}/edit`);
+    else router.push(`/gallery/${color}/photo/${id}`);
   };
 
-  return (
+  return currentColor ? (
     <section
       className={classNames("main-frame main-frame--has-no-margin-left", {
         [`main-frame--${currentColor}`]: true,
       })}
     >
+      {pathname.includes("edit") && (
+        <IconButton
+          variant="ghost"
+          className={galleryStyles.modalButton}
+          onClick={handleChangeGallery}
+          title="change gallery"
+        >
+          <DashboardIcon width="80" height="80" />
+        </IconButton>
+      )}
       {!isLoading && photosByColor && photosByColor.length > 16 && (
         <div
           className={galleryStyles.paginationNumber}
@@ -85,7 +104,7 @@ const Gallery: React.FC<GalleryProps> = ({ currentColor }) => {
               ))}
       </Grid>
     </section>
-  );
+  ) : null;
 };
 
 export default Gallery;

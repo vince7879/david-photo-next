@@ -14,7 +14,7 @@ const Home: React.FC = () => {
 
   const handleSignIn = () => {
     setDashboardIsLoading(true);
-    signIn("google", { redirectTo: "/dashboard/add-photo" });
+    signIn("google", { redirectTo: "/dashboard/new" });
   };
 
   return (

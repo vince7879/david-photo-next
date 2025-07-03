@@ -3,31 +3,31 @@
 import { GalleryPhotosProvider } from "@/app/contexts/GalleryPhotosContext";
 import React, { useState } from "react";
 import classNames from "classnames";
-import DragAndDropPanel from "./DragAndDropPanel";
 import NavBarDashboard from "@/app/components/NavBar/NavBarDashboard/NavBarDashboard";
 import Modal from "@/app/components/Modal/Modal";
 import colorShapeStyles from "@/app/components/ColorShape/ColorShape.module.scss";
 import colorSquareStyles from "@/app/components/ColorSquare/ColorSquare.module.scss";
-import dragAndDropPanelStyles from "./DragAndDropPanel.module.scss";
+import dragAndDropPanelStyles from "@/app/dashboard/reorder/components/DragAndDropPanel.module.scss";
 import { Color } from "@prisma/client";
 import { Grid } from "@radix-ui/themes";
+import Gallery from "@/app/components/Gallery/Gallery";
 
-const ReorderPhotosPage: React.FC = () => {
+const EditPhotosPage: React.FC = () => {
   const [showModal, setShowModal] = useState(true);
-  const [userColorChoice, setUserColorChoice] = useState<Color | null>(null);
+  const [userColorChoice, setUserColorChoice] = useState<Color | undefined>();
 
   const handleChoice = (colorChoice: Color) => {
     setUserColorChoice(colorChoice);
     setShowModal(false);
   };
 
-  const handleChooseGallery = () => {
+  const handleChangeGallery = () => {
     setShowModal(true);
   };
 
   return (
     <>
-      <Modal isShown={showModal} title="Choose a color to edit">
+      <Modal isShown={showModal} title="Choose a gallery to edit">
         <Grid
           columns="3"
           gap="5"
@@ -56,13 +56,10 @@ const ReorderPhotosPage: React.FC = () => {
         <aside>
           <NavBarDashboard />
         </aside>
-        <DragAndDropPanel
-          currentColor={userColorChoice}
-          handleChooseGallery={handleChooseGallery}
-        />
+        <Gallery currentColor={userColorChoice} handleChangeGallery={handleChangeGallery} />
       </GalleryPhotosProvider>
     </>
   );
 };
 
-export default ReorderPhotosPage;
+export default EditPhotosPage;

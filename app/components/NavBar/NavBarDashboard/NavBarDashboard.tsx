@@ -3,7 +3,12 @@ import navBarStyles from "../NavBar.module.scss";
 import Link from "next/link";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
-import { ExitIcon, ImageIcon, Pencil2Icon } from "@radix-ui/react-icons";
+import {
+  ExitIcon,
+  ImageIcon,
+  Pencil2Icon,
+  TransformIcon,
+} from "@radix-ui/react-icons";
 import { IconButton } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 
@@ -28,7 +33,8 @@ const NavBarDashboard: React.FC = () => {
       <IconButton
         variant="ghost"
         className={navBarStyles.navBarDashboard__toolButton}
-        onClick={() => router.push("/dashboard/add-photo")}
+        onClick={() => router.push("/dashboard/new")}
+        title="add a new photo"
         mb="3"
       >
         <ImageIcon width="58" height="58" />
@@ -36,7 +42,17 @@ const NavBarDashboard: React.FC = () => {
       <IconButton
         variant="ghost"
         className={navBarStyles.navBarDashboard__toolButton}
-        onClick={() => router.push("/dashboard/reorder-photos")}
+        onClick={() => router.push("/dashboard/reorder")}
+        title="reorder a gallery"
+        mb="3"
+      >
+        <TransformIcon width="58" height="58" />
+      </IconButton>
+      <IconButton
+        variant="ghost"
+        className={navBarStyles.navBarDashboard__toolButton}
+        onClick={() => router.push("/dashboard/edit")}
+        title="edit a photo"
         mb="9"
       >
         <Pencil2Icon width="58" height="58" viewBox="2 1 12 14" />

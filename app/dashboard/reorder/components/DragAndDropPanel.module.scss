@@ -18,7 +18,7 @@ $gallery-codes: (
   --border-size: 25px;
 
   position: relative;
-  
+
   &__page {
     width: var(--inner-length);
     grid-template-rows: repeat(4, minmax(0, 1fr));
@@ -29,7 +29,7 @@ $gallery-codes: (
         border-left: var(--border-size) solid #{$color-hex-code};
         border-right: var(--border-size) solid #{$color-hex-code};
 
-        @if ($gallery-color == 'black') {
+        @if ($gallery-color =='black') {
           border-left: var(--border-size) solid var(--white);
           border-right: var(--border-size) solid var(--white);
         }
@@ -40,7 +40,7 @@ $gallery-codes: (
       &--has-#{$gallery-color}-border-bottom {
         border-bottom: var(--border-size) solid #{$color-hex-code};
 
-        @if ($gallery-color == 'black') {
+        @if ($gallery-color =='black') {
           border-bottom: var(--border-size) solid var(--white);
         }
       }
@@ -55,10 +55,6 @@ $gallery-codes: (
     object-fit: contain;
     padding: 20px;
     contain: strict;
-
-    &:active {
-      cursor: grabbing;
-    }
   }
 
   &__pageSeparator {
@@ -68,28 +64,28 @@ $gallery-codes: (
     @each $gallery-color, $color-hex-code in $gallery-codes {
       &--#{$gallery-color} {
         background-color: #{$color-hex-code};
-        
-        @if ($gallery-color == 'black') {
+
+        @if ($gallery-color =='black') {
           background-color: var(--border-size) solid var(--white);
         }
       }
     }
   }
-  
+
   &__pageTitle {
     text-align: center;
     font-weight: bold;
     width: 100%;
-    
+
     @each $gallery-color, $color-hex-code in $gallery-codes {
       &--#{$gallery-color} {
         background-color: #{$color-hex-code};
-        
-        @if ($gallery-color == 'black') {
+
+        @if ($gallery-color =='black') {
           background-color: var(--white);
         }
 
-        @if ($gallery-color == 'white' or $gallery-color == 'black' or $gallery-color == 'blackwhite' or $gallery-color == 'yellow') {
+        @if ($gallery-color =='white' or $gallery-color =='black' or $gallery-color =='blackwhite' or $gallery-color =='yellow') {
           color: #000;
         }
       }
@@ -109,7 +105,7 @@ $gallery-codes: (
         border-bottom: var(--border-size) solid #{$color-hex-code};
       }
 
-      @if ($gallery-color == 'black') {
+      @if ($gallery-color =='black') {
         border-left: var(--border-size) solid var(--white);
         border-right: var(--border-size) solid var(--white);
         border-bottom: var(--border-size) solid var(--white);
