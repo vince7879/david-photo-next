@@ -38,12 +38,10 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
   ];
 
   const [photo, setPhoto] = useState<File | null>(null);
-  console.log("🚀 ~ photo:", photo);
   const [photoPreview, setPhotoPreview] = useState<string | null | undefined>(
     null
   );
   const [isPortrait, setIsPortrait] = useState<boolean | null>(null);
-  console.log("🚀 ~ isPortrait:", isPortrait);
 
   const {
     register,
@@ -54,7 +52,7 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
   } = useForm<PhotoFormData>({
     resolver: zodResolver(createPhotoSchema),
   });
-  const [error, setError] = useState("");
+  const [submitMessage, setSubmitMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -154,11 +152,10 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
 
       reset();
       setPhotoPreview(null);
-      // @todo: change color alert when it's a success
       // @todo: remove the message as soon as an input is touch
-      setError(`photo ${photoData ? "updated" : "added"} successfully!`);
+      setSubmitMessage(`photo ${photoData ? "updated" : "added"} successfully!`);
     } catch (error) {
-      setError("An unexpected error occured.");
+      setSubmitMessage("An unexpected error occured.");
     } finally {
       setIsSubmitting(false);
     }
@@ -241,6 +238,7 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
                   name="color"
                   control={control}
                   // @todo: fix when a photo is updated the dropdown displays the old one
+                  // it's because the url keeps the old color
                   defaultValue={photoData?.color}
                   render={({ field }) => (
                     <Select.Root
@@ -276,9 +274,9 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
               {isSubmitting && <Spinner />}
             </Button>
           </form>
-          {error && (
-            <Callout.Root color="red" className="mt-5">
-              <Callout.Text>{error}</Callout.Text>
+          {submitMessage && (
+            <Callout.Root color={submitMessage.includes("success") ? "green" : "red"} className="mt-5">
+              <Callout.Text>{submitMessage}</Callout.Text>
             </Callout.Root>
           )}
         </div>
