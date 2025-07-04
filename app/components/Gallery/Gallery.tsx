@@ -55,7 +55,7 @@ const Gallery: React.FC<GalleryProps> = ({
           onClick={handleChangeGallery}
           title="change gallery"
         >
-          <DashboardIcon width="80" height="80" />
+          <DashboardIcon width="70" height="70" />
         </IconButton>
       )}
       {!isLoading && photosByColor && photosByColor.length > 16 && (

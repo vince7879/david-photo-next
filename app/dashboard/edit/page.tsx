@@ -9,7 +9,7 @@ import colorShapeStyles from "@/app/components/ColorShape/ColorShape.module.scss
 import colorSquareStyles from "@/app/components/ColorSquare/ColorSquare.module.scss";
 import dragAndDropPanelStyles from "@/app/dashboard/reorder/components/DragAndDropPanel.module.scss";
 import { Color } from "@prisma/client";
-import { Grid } from "@radix-ui/themes";
+import { Flex, Grid } from "@radix-ui/themes";
 import Gallery from "@/app/components/Gallery/Gallery";
 
 const EditPhotosPage: React.FC = () => {
@@ -56,7 +56,15 @@ const EditPhotosPage: React.FC = () => {
         <aside>
           <NavBarDashboard />
         </aside>
-        <Gallery currentColor={userColorChoice} handleChangeGallery={handleChangeGallery} />
+        {!showModal && (
+          <Flex direction="column">
+            <h1 className="text-3xl font-bold mb-5">Choose a photo to edit</h1>
+            <Gallery
+              currentColor={userColorChoice}
+              handleChangeGallery={handleChangeGallery}
+            />
+          </Flex>
+        )}
       </GalleryPhotosProvider>
     </>
   );
