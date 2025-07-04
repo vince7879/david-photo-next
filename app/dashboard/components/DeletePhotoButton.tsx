@@ -1,3 +1,4 @@
+import Spinner from "@/app/components/Spinner";
 import { Photo } from "@prisma/client";
 import { AlertDialog, Button, ButtonProps, Flex } from "@radix-ui/themes";
 import axios from "axios";
@@ -16,12 +17,16 @@ const DeletePhotoButton = ({
 }: DeletePhotoButton) => {
   const router = useRouter();
   const [error, setError] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const deletePhoto = async () => {
     try {
+      setIsDeleting(true);
       await axios.delete(`/api/photos/${galleryColor}/photo/${photoId}`);
+
       router.push("/dashboard/edit");
     } catch (error) {
+      setIsDeleting(false);
       setError(true);
     }
   };
@@ -30,8 +35,9 @@ const DeletePhotoButton = ({
     <>
       <AlertDialog.Root>
         <AlertDialog.Trigger>
-          <Button {...props} color="red">
+          <Button {...props} color="red" disabled={isDeleting}>
             Delete Photo
+            {isDeleting && <Spinner />}
           </Button>
         </AlertDialog.Trigger>
         <AlertDialog.Content>

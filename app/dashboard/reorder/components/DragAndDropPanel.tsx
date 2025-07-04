@@ -11,14 +11,14 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { usePhotosByColorData } from "@/app/contexts/GalleryPhotosContext";
 import Image from "next/image";
-import { Button, Flex, Grid, Skeleton } from "@radix-ui/themes";
+import { Button, Flex, Grid, Text } from "@radix-ui/themes";
 import dragAndDropPanelStyles from "./DragAndDropPanel.module.scss";
 import classNames from "classnames";
 import { Photo } from "@prisma/client";
 import { Color } from "@prisma/client";
 import { areArraysEqual } from "@/app/helpers/arrayHelper";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import Spinner from "@/app/components/Spinner";
 
 interface DragAndDropPanelProps {
   currentColor: Color | null;
@@ -62,11 +62,16 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
   handleChooseGallery,
 }) => {
   const photosByColor = usePhotosByColorData();
-  const router = useRouter();
-
   const [sortedPhotos, setSortedPhotos] = useState<Photo[] | undefined>(
     photosByColor
   );
+  const [isValidatingNewOrder, setIsValidatingNewOrder] = useState(false);
+  const [newOrderValidationMessage, setNewOrderValidationMessage] =
+    useState("");
+
+  useEffect(() => {
+    setNewOrderValidationMessage("");
+  }, [currentColor]);
 
   useEffect(() => {
     setSortedPhotos(photosByColor);
@@ -89,15 +94,17 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
     }
   };
 
-  const handleValidate = async () => {
+  const validateNewOrder = async () => {
     try {
-      const response = await axios.post("/api/photos/update-order", {
+      setIsValidatingNewOrder(true);
+      await axios.post("/api/photos/update-order", {
         photoOrders: sortedPhotos,
       });
-      // @todo: find what to display to the user once the new order is validated successfully
-      // maybe evolve and use the Modal whith a children? just a tiny msg next to the button?
+      setIsValidatingNewOrder(false);
+      setNewOrderValidationMessage("New order applied successfully!");
     } catch (error) {
-      console.error("Error saving order:", error);
+      setIsValidatingNewOrder(false);
+      setNewOrderValidationMessage("An unexpected error occured.");
     }
   };
 
@@ -120,10 +127,26 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
         {(sortedPhotos.length === 0 && (
           <span className="mr-5">There are no photos in this gallery</span>
         )) ||
-          (!areArraysEqual(photosByColor, sortedPhotos) && (
-            <Button onClick={handleValidate}>Validate the new order</Button>
-          )) ||
+          (!areArraysEqual(photosByColor, sortedPhotos) &&
+            !newOrderValidationMessage && (
+              <Button
+                onClick={validateNewOrder}
+                disabled={isValidatingNewOrder}
+              >
+                Validate the new order
+                {isValidatingNewOrder && <Spinner />}
+              </Button>
+            )) ||
           null}
+        {newOrderValidationMessage && (
+          <Text
+            color={
+              newOrderValidationMessage.includes("success") ? "green" : "red"
+            }
+          >
+            {newOrderValidationMessage}
+          </Text>
+        )}
       </Flex>
       {sortedPhotos.length > 0 ? (
         <DndContext

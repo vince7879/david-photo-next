@@ -277,13 +277,17 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
               {isSubmitting && <Spinner />}
             </Button>
             {photoData && (
-              <DeletePhotoButton photoId={photoData.publicId} galleryColor={photoData.color} ml="5" />
+              <DeletePhotoButton
+                photoId={photoData.publicId}
+                galleryColor={photoData.color}
+                ml="5"
+              />
             )}
           </form>
           {submitMessage && (
             <Callout.Root
               color={submitMessage.includes("success") ? "green" : "red"}
-              className="mt-5"
+              mt="5"
             >
               <Callout.Text>{submitMessage}</Callout.Text>
             </Callout.Root>
