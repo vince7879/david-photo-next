@@ -154,7 +154,9 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
       reset();
       setPhotoPreview(null);
       // @todo: remove the message as soon as an input is touch
-      setSubmitMessage(`photo ${photoData ? "updated" : "added"} successfully!`);
+      setSubmitMessage(
+        `photo ${photoData ? "updated" : "added"} successfully!`
+      );
     } catch (error) {
       setSubmitMessage("An unexpected error occured.");
     } finally {
@@ -172,7 +174,7 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
           <h1 className="mb-5 text-3xl font-bold">
             {photoData ? "Edit the photo" : "Add a new photo"}
           </h1>
-          <form className="max-w-xl space-y-3" onSubmit={onSubmit}>
+          <form className="max-w-xl space-y-4" onSubmit={onSubmit}>
             <TextField.Root
               defaultValue={photoData?.place}
               placeholder="Place"
@@ -270,14 +272,19 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
                 />
               </div>
             )}
-            <Button disabled={isSubmitting} className="my-3">
+            <Button disabled={isSubmitting}>
               {photoData ? "Update Photo" : "Submit New Photo"}{" "}
               {isSubmitting && <Spinner />}
             </Button>
-            {photoData && <DeletePhotoButton photoId={photoData.publicId} ml='5' />}
+            {photoData && (
+              <DeletePhotoButton photoId={photoData.publicId} galleryColor={photoData.color} ml="5" />
+            )}
           </form>
           {submitMessage && (
-            <Callout.Root color={submitMessage.includes("success") ? "green" : "red"} className="mt-5">
+            <Callout.Root
+              color={submitMessage.includes("success") ? "green" : "red"}
+              className="mt-5"
+            >
               <Callout.Text>{submitMessage}</Callout.Text>
             </Callout.Root>
           )}
