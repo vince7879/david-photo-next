@@ -8,7 +8,7 @@ export interface GalleryPageProps {
   params: { color: Color };
 }
 
-export const GalleryPage: React.FC<GalleryPageProps> = ({
+const GalleryPage: React.FC<GalleryPageProps> = ({
   params: { color },
 }) => (
   <>
