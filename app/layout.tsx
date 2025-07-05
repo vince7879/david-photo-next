@@ -1,16 +1,22 @@
 import "@radix-ui/themes/styles.css";
 import "./theme-config.css";
 import "./globals.scss";
+import * as Sentry from "@sentry/nextjs";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Theme, ThemePanel } from "@radix-ui/themes";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
-export const metadata: Metadata = {
-  title: "David Photo",
-  description: "Cool photo galleries by color",
-};
+export function generateMetadata(): Metadata {
+  return {
+    title: "David Photo",
+    description: "Cool photo galleries by color",
+    other: {
+      ...Sentry.getTraceData(),
+    },
+  };
+}
 
 interface RootLayoutProps {
   children: React.ReactNode;
