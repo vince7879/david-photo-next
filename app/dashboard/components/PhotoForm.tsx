@@ -49,12 +49,14 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
     control,
     handleSubmit,
     formState: { errors },
+    watch,
     reset,
   } = useForm<PhotoFormData>({
     resolver: zodResolver(createPhotoSchema),
   });
   const [submitMessage, setSubmitMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [justSubmitted, setJustSubmitted] = useState(false);
 
   useEffect(() => {
     setPhotoPreview(photoData?.photoUrl);
@@ -157,12 +159,27 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
       setSubmitMessage(
         `photo ${photoData ? "updated" : "added"} successfully!`
       );
+      setJustSubmitted(true);
     } catch (error) {
       setSubmitMessage("An unexpected error occured.");
+      setJustSubmitted(true);
     } finally {
       setIsSubmitting(false);
     }
   });
+
+  useEffect(() => {
+    if (!justSubmitted) return;
+
+    const subscription = watch((_, { name }) => {
+      if (name) {
+        setSubmitMessage("");
+        setJustSubmitted(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [justSubmitted, watch]);
 
   return (
     <>
