@@ -24,18 +24,18 @@ interface PhotoFormProps {
 const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
   // @todo: to move to a global constant file
   const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    "janvier",
+    "février",
+    "mars",
+    "avril",
+    "mai",
+    "juin",
+    "juillet",
+    "août",
+    "septembre",
+    "octobre",
+    "novembre",
+    "décembre",
   ];
 
   const [photo, setPhoto] = useState<File | null>(null);
