@@ -9,6 +9,21 @@ export async function POST(request: NextRequest) {
     if(!validation.success) 
         return NextResponse.json(validation.error.format(), { status: 400 })
 
+    // to count the photos of the current gallery
+    const existingPhotosCount = await prisma.photo.count({
+        where: {
+            color: body.color,
+        },
+    });
+
+    // Check the limit
+    if (existingPhotosCount >= 32) {
+        return NextResponse.json(
+            { message: "This gallery has reached the maximum number of 32 photos" },
+            { status: 403 } 
+        );
+    }
+
     const newPhoto = await prisma.photo.create({
         data: { 
             place: body.place,
@@ -17,7 +32,8 @@ export async function POST(request: NextRequest) {
             color: body.color,
             photoUrl: body.photoUrl,
             publicId: body.publicId,
-            isPortrait: body.isPortrait
+            isPortrait: body.isPortrait,
+            order: existingPhotosCount, // 0-based index
         }
     })
 

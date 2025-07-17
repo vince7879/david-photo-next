@@ -19,7 +19,7 @@ model Photo {
   photoUrl   String
   publicId   String   @unique
   isPortrait Boolean?
-  order      Int?
+  order      Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }

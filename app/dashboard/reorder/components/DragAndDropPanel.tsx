@@ -97,12 +97,18 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
   const validateNewOrder = async () => {
     try {
       setIsValidatingNewOrder(true);
+
       await axios.post("/api/photos/update-order", {
-        photoOrders: sortedPhotos,
+        photoOrders: sortedPhotos?.map((photo, index) => ({
+          id: photo.id,
+          order: index,
+        })),
       });
+
       setIsValidatingNewOrder(false);
       setNewOrderValidationMessage("New order applied successfully!");
     } catch (error) {
+      console.error(error);
       setIsValidatingNewOrder(false);
       setNewOrderValidationMessage("An unexpected error occured.");
     }

@@ -2,7 +2,7 @@
 
 import { Button, Callout, Flex, Select, TextField } from "@radix-ui/themes";
 import { Controller, useForm } from "react-hook-form";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createPhotoSchema } from "@/app/validationSchemas";
@@ -143,25 +143,37 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
           isPortrait,
         }),
       };
+      try {
+        if (photoData) {
+          await axios.patch(
+            `/api/photos/${photoData.color}/photo/${photoData.publicId}`,
+            data
+          );
+        } else {
+          await axios.post("/api/photos", payload);
+        }
 
-      if (photoData) {
-        await axios.patch(
-          `/api/photos/${photoData.color}/photo/${photoData.publicId}`,
-          data
+        reset();
+        setPhotoPreview(null);
+        setSubmitMessage(
+          `photo ${photoData ? "updated" : "added"} successfully!`
         );
-      } else {
-        await axios.post("/api/photos", payload);
+        setJustSubmitted(true);
+      } catch (error: any) {
+        if (error.response) {
+          const serverMessage =
+            error.response.data?.error || "Unexpected server error.";
+          setSubmitMessage(serverMessage);
+        } else {
+          setSubmitMessage("Network error. Please try again.");
+        }
       }
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message?: string }>;
+      const message =
+        axiosError.response?.data.message || "An unexpected error occurred.";
 
-      reset();
-      setPhotoPreview(null);
-      // @todo: remove the message as soon as an input is touch
-      setSubmitMessage(
-        `photo ${photoData ? "updated" : "added"} successfully!`
-      );
-      setJustSubmitted(true);
-    } catch (error) {
-      setSubmitMessage("An unexpected error occured.");
+      setSubmitMessage(message);
       setJustSubmitted(true);
     } finally {
       setIsSubmitting(false);
