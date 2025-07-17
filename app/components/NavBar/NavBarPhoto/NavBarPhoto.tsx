@@ -43,7 +43,6 @@ const NavBarPhoto: React.FC<NavBarPhotoProps> = ({
       {photosByColor && galleryIds && (currentPhotoIndexInGallery || currentPhotoIndexInGallery === 0) && (
         <>
           <ColorSquare
-            // @todo: color black for the black and white arrow btns
             color={currentColor}
             buttonVariant="previous"
             isDisabled={currentPhotoIndexInGallery === 0}
@@ -57,12 +56,11 @@ const NavBarPhoto: React.FC<NavBarPhotoProps> = ({
             <Image
               width="48"
               height="48"
-              src="/images/left-arrow.svg"
+              src={`/images/left-arrow${currentColor === 'white' && '-black' || currentColor === 'blackwhite' && '-blackwhite' || '-white'}.svg`}
               alt="previous photo"
             />
           </ColorSquare>
           <ColorSquare
-            // @todo: color black for the black and white arrow btns
             color={currentColor}
             buttonVariant="next"
             isDisabled={currentPhotoIndexInGallery === galleryIds.length - 1}
@@ -76,7 +74,7 @@ const NavBarPhoto: React.FC<NavBarPhotoProps> = ({
             <Image
               width="48"
               height="48"
-              src="/images/right-arrow.svg"
+              src={`/images/right-arrow${currentColor === 'white' && '-black' || currentColor === 'blackwhite' && '-blackwhite' || '-white'}.svg`}
               alt="next photo"
             />
           </ColorSquare>

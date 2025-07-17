@@ -60,13 +60,14 @@ const Gallery: React.FC<GalleryProps> = ({
       )}
       {!isLoading && photosByColor && photosByColor.length > 16 && (
         <div
-          className={galleryStyles.paginationNumber}
+          className={classNames(galleryStyles.paginationNumber, {
+            [galleryStyles["paginationNumber--is-black"]]: currentColor === 'white',
+          })}
           onClick={handlePagination}
         >
           {page}
         </div>
       )}
-      {/* @todo add tiny border to thumbnails */}
       <Grid columns="4" className={galleryStyles.thumbnailsFrame}>
         {isLoading
           ? Array.from({ length: 16 }).map((_, index) => (

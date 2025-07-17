@@ -22,24 +22,21 @@ export const GalleryPhotosProvider = ({
   color,
   children,
 }: PropsWithChildren<IProvider>) => {
-  const [photosByColor, setPhotosByColor] = useState<IContext['photosByColor']>();
+  const [photosByColor, setPhotosByColor] =
+    useState<IContext["photosByColor"]>();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!color) return
-    setIsLoading(true)
-    setPhotosByColor(undefined)
+    if (!color) return;
+
+    setIsLoading(true);
+    setPhotosByColor(undefined);
 
     const fetchPhotosByColor = async () => {
       const { data } = await axios.get("/api/photos/" + color);
       // @todo: handle the redirect to 404 if color in url param is not valid
 
       setPhotosByColor(data);
-
-      // @todo: remove those 2 lines below that are created in order to make tests
-      // const { data: data2 } = await axios.get("/api/photos/");
-      // setPhotosByColor([...data2].slice(-30));
-      
       setIsLoading(false);
     };
 

@@ -55,6 +55,12 @@
   font-family: revert;
   cursor: pointer;
   user-select: none;
+
+  &--is-black {
+    border-left-color: var(--black);
+    border-bottom-color: var(--black);
+    color: var(--black);
+  }
 }
 
 .modalButton {
