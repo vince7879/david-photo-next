@@ -29,11 +29,11 @@ enum Color {
   white
   brown
   yellow
+  orange
   red
   purple
   green
   blue
   grey
   blackwhite
-  orange
 }
