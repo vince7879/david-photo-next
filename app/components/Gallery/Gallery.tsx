@@ -13,7 +13,13 @@ import {
 import { Photo } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import { DashboardIcon } from "@radix-ui/react-icons";
+import { Cormorant_Upright } from "next/font/google";
 
+const cormorantFont = Cormorant_Upright({
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+});
 interface GalleryProps {
   currentColor?: Photo["color"];
   handleChangeGallery?: () => void;
@@ -60,9 +66,14 @@ const Gallery: React.FC<GalleryProps> = ({
       )}
       {!isLoading && photosByColor && photosByColor.length > 16 && (
         <div
-          className={classNames(galleryStyles.paginationNumber, {
-            [galleryStyles["paginationNumber--is-black"]]: currentColor === 'white',
-          })}
+          className={classNames(
+            galleryStyles.paginationNumber,
+            {
+              [galleryStyles["paginationNumber--is-black"]]:
+                currentColor === "white",
+            },
+            cormorantFont.className
+          )}
           onClick={handlePagination}
         >
           {page}

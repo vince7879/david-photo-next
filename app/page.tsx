@@ -38,8 +38,8 @@ const Home: React.FC = () => {
       <ColorShape variant="big-square" color={Color.red} />
       {/* big yellow */}
       <ColorShape variant="top-small-square" color={Color.yellow} />
-      {/* long white */}
-      <ColorShape variant="first-vertical-rectangle" color={Color.white} />
+      {/* long grey */}
+      <ColorShape variant="first-vertical-rectangle" color={Color.grey} />
       {/* long purple */}
       <ColorShape variant="second-vertical-rectangle" color={Color.purple} />
       {/* purple square */}
@@ -78,8 +78,8 @@ const Home: React.FC = () => {
         <span>Tous droits réservés</span>
       </div>
 
-      {/* right grey */}
-      <ColorShape variant="right-side-top" color={Color.grey} />
+      {/* right white */}
+      <ColorShape variant="right-side-top" color={Color.white} />
       {/* right orange */}
       <ColorShape variant="right-side-bottom" color={Color.orange} />
     </section>
