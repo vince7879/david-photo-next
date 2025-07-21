@@ -24,8 +24,8 @@ const Home: React.FC = () => {
         <span>新鋭</span>
       </div>
       {/* </TopWhiteRecent> */}
-      {/* top white */}
-      <ColorShape variant="top-middle" color={Color.white} />
+      {/* top green */}
+      <ColorShape variant="top-middle" color={Color.green} />
       {/* top orange */}
       <ColorShape variant="top-right" color={Color.orange} />
       {/* left brown */}
@@ -34,7 +34,7 @@ const Home: React.FC = () => {
       <ColorShape variant="left-side-middle" color={Color.white} />
       {/* left yellow */}
       <ColorShape variant="left-side-bottom" color={Color.yellow} />
-      {/* Big red */}
+      {/* big red */}
       <ColorShape variant="big-square" color={Color.red} />
       {/* big yellow */}
       <ColorShape variant="top-small-square" color={Color.yellow} />
@@ -78,8 +78,8 @@ const Home: React.FC = () => {
         <span>Tous droits réservés</span>
       </div>
 
-      {/* right white */}
-      <ColorShape variant="right-side-top" color={Color.white} />
+      {/* right grey */}
+      <ColorShape variant="right-side-top" color={Color.grey} />
       {/* right orange */}
       <ColorShape variant="right-side-bottom" color={Color.orange} />
     </section>
