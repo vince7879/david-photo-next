@@ -74,7 +74,7 @@ const Home: React.FC = () => {
       <ColorShape variant="bottom-rectangle" color={Color.blackwhite} />
 
       <div className={classNames(homeStyles.shape, homeStyles.copyright)}>
-        <span>&copy; 2010 DAVID PREAT</span>
+        <span>&copy; 2010</span>
         <span>Tous droits réservés</span>
       </div>
 
