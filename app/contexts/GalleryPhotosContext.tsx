@@ -7,6 +7,7 @@ import { Photo, Color } from "@prisma/client";
 
 interface IContext {
   photosByColor?: Photo[];
+  photosRecent?: Photo[];
   isLoading: boolean;
 }
 
@@ -16,14 +17,17 @@ const GalleryPhotosContext = createContext<IContext>({
 });
 
 interface IProvider {
-  color: Color;
+  color?: Color;
+  isRecent?: boolean;
 }
 export const GalleryPhotosProvider = ({
   color,
+  isRecent,
   children,
 }: PropsWithChildren<IProvider>) => {
   const [photosByColor, setPhotosByColor] =
     useState<IContext["photosByColor"]>();
+  const [photosRecent, setPhotosRecent] = useState<IContext["photosRecent"]>();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -43,10 +47,27 @@ export const GalleryPhotosProvider = ({
     fetchPhotosByColor();
   }, [color]);
 
+  useEffect(() => {
+    if (!isRecent) return;
+
+    setIsLoading(true);
+    setPhotosRecent(undefined);
+
+    const fetchPhotosRecent = async () => {
+      const { data } = await axios.get("/api/photos/recent");
+
+      setPhotosRecent(data);
+      setIsLoading(false);
+    };
+
+    fetchPhotosRecent();
+  }, [isRecent]);
+
   return (
     <GalleryPhotosContext.Provider
       value={{
         photosByColor,
+        photosRecent,
         isLoading,
       }}
     >
@@ -57,5 +78,7 @@ export const GalleryPhotosProvider = ({
 
 export const usePhotosByColorData = () =>
   useContextSelector(GalleryPhotosContext, (state) => state.photosByColor);
+export const usePhotosRecentData = () =>
+  useContextSelector(GalleryPhotosContext, (state) => state.photosRecent);
 export const useGalleryPhotosIsLoadingSelector = () =>
   useContextSelector(GalleryPhotosContext, (state) => state.isLoading);

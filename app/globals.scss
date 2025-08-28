@@ -18,19 +18,16 @@
   --blue: #1a1e7c;
   --grey: #6F787D;
   --orange: #E67B22;
-  --recent: #FF7F50;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
-   
   }
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  
 }
 
 .main-frame {
@@ -54,35 +51,60 @@ body {
   &--black {
     background-color: var(--black);
   }
+
   &--white {
     background-color: var(--white);
   }
+
   &--brown {
     background-color: var(--brown);
   }
+
   &--yellow {
     background-color: var(--yellow);
   }
+
   &--red {
     background-color: var(--red);
   }
+
   &--purple {
     background-color: var(--purple);
   }
+
   &--green {
     background-color: var(--green);
   }
+
   &--blue {
     background-color: var(--blue);
   }
+
   &--grey {
     background-color: var(--grey);
   }
+
   &--orange {
     background-color: var(--orange);
   }
+
   &--blackwhite {
     background: linear-gradient(to top right, var(--white) 50%, var(--black) 50%),
+  }
+
+  &--is-recent {
+    background: conic-gradient(from 40deg,
+        var(--black),
+        var(--brown),
+        var(--yellow),
+        var(--orange),
+        var(--red),
+        var(--purple),
+        var(--green),
+        var(--blue),
+        var(--grey),
+        var(--white),
+        var(--black));
   }
 }
 

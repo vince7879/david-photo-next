@@ -6,7 +6,7 @@ import { ColorSquare } from "@/app/components/ColorSquare/ColorSquare";
 import { Color } from "@prisma/client";
 
 interface NavBarGalleryProps {
-  currentColor: Color;
+  currentColor?: Color;
 }
 
 const NavBarGallery: React.FC<NavBarGalleryProps> = ({ currentColor }) => (
@@ -14,7 +14,7 @@ const NavBarGallery: React.FC<NavBarGalleryProps> = ({ currentColor }) => (
     className={`flex flex-col justify-between items-center ${navBarStyles.navBar}`}
   >
     {/* mini-mondrian to go to the homepage */}
-    <Link href="/" className="mb-3.5">
+    {currentColor && <Link href="/" className="mb-3.5">
       <Image
         src="/images/mondrian-mini.png"
         alt="mondrian-mini"
@@ -22,11 +22,11 @@ const NavBarGallery: React.FC<NavBarGalleryProps> = ({ currentColor }) => (
         height={50}
         priority={true}
       />
-    </Link>
+    </Link>}
 
     {/* list of colors' squares to go to the galleries (for the Gallery page) */}
     {Object.values(Color)
-      .filter((color) => color !== currentColor)
+      .filter((color) => currentColor ? color !== currentColor : true)
       .map((color) => (
         <ColorSquare key={color} color={color} />
       ))}

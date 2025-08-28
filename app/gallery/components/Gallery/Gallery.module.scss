@@ -42,26 +42,6 @@
   }
 }
 
-.paginationNumber {
-  width: 77px;
-  height: 77px;
-  border: 2px solid var(--white);
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  text-align: center;
-  font-size: 48px;
-  line-height: 1.35;
-  cursor: pointer;
-  user-select: none;
-
-  &--is-black {
-    border-left-color: var(--black);
-    border-bottom-color: var(--black);
-    color: var(--black);
-  }
-}
-
 .modalButton {
   position: absolute;
   color: #fff;
@@ -72,4 +52,13 @@
     background-color: unset;
     cursor: pointer;
   }
+}
+
+.logoLink {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  border-left: 4px solid black;
+  border-bottom: 4px solid black;
+  z-index: 2;
 }

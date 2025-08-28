@@ -10,7 +10,7 @@ import colorSquareStyles from "@/app/components/ColorSquare/ColorSquare.module.s
 import dragAndDropPanelStyles from "@/app/dashboard/reorder/components/DragAndDropPanel.module.scss";
 import { Color } from "@prisma/client";
 import { Flex, Grid } from "@radix-ui/themes";
-import Gallery from "@/app/components/Gallery/Gallery";
+import Gallery from "@/app/gallery/components/Gallery/Gallery";
 
 const EditPhotosPage: React.FC = () => {
   const [showModal, setShowModal] = useState(true);

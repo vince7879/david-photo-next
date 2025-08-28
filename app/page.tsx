@@ -8,9 +8,16 @@ import Image from "next/image";
 import { Color } from "@prisma/client";
 import { signIn } from "next-auth/react";
 import { Spinner } from "@radix-ui/themes";
+import { useRouter } from "next/navigation";
 
 const Home: React.FC = () => {
+  const router = useRouter();
   const [dashboardIsLoading, setDashboardIsLoading] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
+  const handleGoToRecent = () => {
+    router.push("/gallery/recent");
+  };
 
   const handleSignIn = () => {
     setDashboardIsLoading(true);
@@ -20,8 +27,13 @@ const Home: React.FC = () => {
   return (
     <section className="main-frame">
       {/* <TopWhiteRecent> */}
-      <div className={classNames(homeStyles.shape, homeStyles.topWhiteRecent)}>
-        <span>新鋭</span>
+      <div
+        className={classNames(homeStyles.shape, homeStyles.topWhiteRecent)}
+        onClick={handleGoToRecent}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+      >
+        <span>{hovered ? "RECENT" : "新鋭"}</span>
       </div>
       {/* </TopWhiteRecent> */}
       {/* top green */}
