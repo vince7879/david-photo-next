@@ -1,24 +1,41 @@
 import Gallery from "@/app/gallery/components/Gallery/Gallery";
 import NavBarGallery from "@/app/components/NavBar/NavBarGallery/NavBarGallery";
 import { GalleryPhotosProvider } from "@/app/contexts/GalleryPhotosContext";
-import React from "react";
+import prisma from "@/prisma/client";
 import { Color } from "@prisma/client";
+
+export const dynamic = "force-static";
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  return Object.values(Color).map((color) => ({
+    color,
+  }));
+}
 
 export interface GalleryPageProps {
   params: { color: Color };
 }
 
-const GalleryPage: React.FC<GalleryPageProps> = ({
+const GalleryPage: React.FC<GalleryPageProps> = async ({
   params: { color },
-}) => (
-  <>
-    <aside>
-      <NavBarGallery currentColor={color} />
-    </aside>
-    <GalleryPhotosProvider color={color}>
-      <Gallery currentColor={color} />
-    </GalleryPhotosProvider>
-  </>
-);
+}) => {
+  const photos = await prisma.photo.findMany({
+    where: { color },
+    orderBy: [{ order: "asc" }, { createdAt: "asc" }],
+  });
+
+  return (
+    <>
+      <aside>
+        <NavBarGallery currentColor={color} />
+      </aside>
+
+      <GalleryPhotosProvider color={color} initialPhotosByColor={photos}>
+        <Gallery currentColor={color} />
+      </GalleryPhotosProvider>
+    </>
+  );
+};
 
 export default GalleryPage;

@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import {
   useGalleryPhotosIsLoadingSelector,
   usePhotosByColorData,
-  usePhotosRecentData,
+  // usePhotosRecentData,
 } from "@/app/contexts/GalleryPhotosContext";
 import { Photo } from "@prisma/client";
 import { usePathname } from "next/navigation";
@@ -31,7 +31,7 @@ const Gallery: React.FC<GalleryProps> = ({
   const router = useRouter();
   const [page, setPage] = useState<PaginationProps["pageNumber"]>(2);
   const photosByColor = usePhotosByColorData();
-  const photosRecent = usePhotosRecentData();
+  // const photosRecent = usePhotosRecentData();
   const isLoading = useGalleryPhotosIsLoadingSelector();
   const pathname = usePathname();
 
@@ -125,30 +125,32 @@ const Gallery: React.FC<GalleryProps> = ({
                     }
                   />
                 </div>
-              ))) ||
-          (isRecent &&
-            photosRecent?.map((photo) => (
-              <div
-                key={photo.id}
-                className={classNames(
-                  galleryStyles.thumbnailsFrame__thumbnail,
-                  {
-                    [galleryStyles[`thumbnailsFrame__thumbnail--is-portrait`]]:
-                      photo.isPortrait,
-                  }
-                )}
-              >
-                <Image
-                  src={photo.photoUrl}
-                  alt={photo.place}
-                  width={200}
-                  height={200}
-                  onClick={() =>
-                    handleClickThumbnail(photo.color, photo.publicId)
-                  }
-                />
-              </div>
-            )))}
+              ))) 
+              // ||
+          // (isRecent &&
+          //   photosRecent?.map((photo) => (
+          //     <div
+          //       key={photo.id}
+          //       className={classNames(
+          //         galleryStyles.thumbnailsFrame__thumbnail,
+          //         {
+          //           [galleryStyles[`thumbnailsFrame__thumbnail--is-portrait`]]:
+          //             photo.isPortrait,
+          //         }
+          //       )}
+          //     >
+          //       <Image
+          //         src={photo.photoUrl}
+          //         alt={photo.place}
+          //         width={200}
+          //         height={200}
+          //         onClick={() =>
+          //           handleClickThumbnail(photo.color, photo.publicId)
+          //         }
+          //       />
+          //     </div>
+          //   )))
+          }
       </Grid>
     </section>
   ) : null;
