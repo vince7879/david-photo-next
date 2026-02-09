@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/client";
 import { PhotoPageProps } from "@/app/gallery/[color]/photo/[photoId]/page";
+import cloudinary from "@/lib/cloudinary";
 
 export async function GET(request: NextRequest, { params }: PhotoPageProps) {
   const { color, photoId } = params;
@@ -43,9 +44,11 @@ export async function PATCH(request: NextRequest, { params }: PhotoPageProps) {
       const targetGalleryCount = await tx.photo.count({
         where: { color: newColor },
       });
-      
+
       if (targetGalleryCount >= 32) {
-        throw new Error("This gallery already has the maximum number of photos (32).");
+        throw new Error(
+          "This gallery already has the maximum number of photos (32).",
+        );
       }
 
       // 2. update the "order" values of the old gallery
@@ -85,7 +88,7 @@ export async function PATCH(request: NextRequest, { params }: PhotoPageProps) {
     console.error("❌ Error while updating photo with color change:", error);
     return NextResponse.json(
       { error: "An unexpected error occurred while updating the photo." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -93,28 +96,24 @@ export async function PATCH(request: NextRequest, { params }: PhotoPageProps) {
 export async function DELETE(request: NextRequest, { params }: PhotoPageProps) {
   const { color, photoId } = params;
 
-  const photo = await prisma.photo.findUnique({
-    where: { publicId: photoId, color },
-  });
-
-  if (!photo)
-    return NextResponse.json({ error: "Invalid photo" }, { status: 404 });
-
-  const deletedPhotoOrder = photo.order;
-
   try {
-    await prisma.$transaction([
-      // 1. delete the photo
-      prisma.photo.delete({
-        where: { id: photo.id },
-      }),
+    // 1. Check if the photo exists
+    const photo = await prisma.photo.findUnique({
+      where: { publicId: photoId, color },
+    });
 
-      // 2. update the order values of the following photos
-      prisma.photo.updateMany({
+    if (!photo) {
+      return NextResponse.json({ error: "Photo not found." }, { status: 404 });
+    }
+
+    // 2. transaction DB : detetion + new order for the gallery
+    const deletedPhoto = await prisma.$transaction(async (tx) => {
+      // update the order values of the following photos
+      await tx.photo.updateMany({
         where: {
           color,
           order: {
-            gt: deletedPhotoOrder,
+            gt: photo.order,
           },
         },
         data: {
@@ -122,15 +121,32 @@ export async function DELETE(request: NextRequest, { params }: PhotoPageProps) {
             decrement: 1,
           },
         },
-      }),
-    ]);
+      });
 
-    return NextResponse.json({});
-  } catch (error) {
-    console.error("Photo deletion failed:", error);
+      // delete the photo from the DB
+      return tx.photo.delete({
+        where: { id: photo.id },
+      });
+    });
+
+    // 3. delete the photo from Cloudinary (after the DB transaction to avoid inconsistencies in case of Cloudinary failure)
+    try {
+      await cloudinary.uploader.destroy(deletedPhoto.publicId);
+    } catch (cloudinaryError) {
+      console.error("⚠️ Cloudinary deletion failed:", cloudinaryError);
+      // we do not block the response: the DB is already consistent
+    }
+
     return NextResponse.json(
-      { error: "Failed to delete photo and update order." },
-      { status: 500 }
+      { success: "Photo deleted successfully." },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.error("❌ Error deleting photo:", error);
+
+    return NextResponse.json(
+      { error: "An unexpected error occurred while deleting the photo." },
+      { status: 500 },
     );
   }
 }
