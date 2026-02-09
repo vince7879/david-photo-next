@@ -1,6 +1,5 @@
 import Gallery from "@/app/gallery/components/Gallery/Gallery";
 import NavBarGallery from "@/app/components/NavBar/NavBarGallery/NavBarGallery";
-import { GalleryPhotosProvider } from "@/app/contexts/GalleryPhotosContext";
 import prisma from "@/prisma/client";
 import { Color } from "@prisma/client";
 
@@ -31,9 +30,7 @@ const GalleryPage: React.FC<GalleryPageProps> = async ({
         <NavBarGallery currentColor={color} />
       </aside>
 
-      <GalleryPhotosProvider color={color} initialPhotosByColor={photos}>
-        <Gallery currentColor={color} />
-      </GalleryPhotosProvider>
+      <Gallery currentColor={color} photos={photos} />
     </>
   );
 };
