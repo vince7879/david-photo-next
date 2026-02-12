@@ -68,6 +68,10 @@ $gallery-codes: (
         @if ($gallery-color =='black') {
           background-color: var(--border-size) solid var(--white);
         }
+
+        @if ($gallery-color =='white' or $gallery-color =='black' or $gallery-color =='blackwhite' or $gallery-color =='yellow') {
+          color: #000;
+        }
       }
     }
   }
