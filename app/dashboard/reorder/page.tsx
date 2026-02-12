@@ -1,24 +1,31 @@
 "use client";
 
-import { GalleryPhotosProvider } from "@/app/contexts/GalleryPhotosContext";
 import React, { useState } from "react";
+import { Color, Photo } from "@prisma/client";
+import { getPhotosByColor } from "@/app/dashboard/actions/getPhotosByColor";
 import classNames from "classnames";
-import DragAndDropPanel from "@/app/dashboard/reorder/components/DragAndDropPanel";
 import NavBarDashboard from "@/app/components/NavBar/NavBarDashboard/NavBarDashboard";
+import DragAndDropPanel from "@/app/dashboard/reorder/components/DragAndDropPanel";
 import Modal from "@/app/components/Modal/Modal";
+import { Grid } from "@radix-ui/themes";
 import colorShapeStyles from "@/app/components/ColorShape/ColorShape.module.scss";
 import colorSquareStyles from "@/app/components/ColorSquare/ColorSquare.module.scss";
 import dragAndDropPanelStyles from "@/app/dashboard/reorder/components/DragAndDropPanel.module.scss";
-import { Color } from "@prisma/client";
-import { Grid } from "@radix-ui/themes";
 
 const ReorderPhotosPage: React.FC = () => {
   const [showModal, setShowModal] = useState(true);
   const [userColorChoice, setUserColorChoice] = useState<Color | null>(null);
+  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleChoice = (colorChoice: Color) => {
+  const handleChoice = async (colorChoice: Color) => {
     setUserColorChoice(colorChoice);
     setShowModal(false);
+
+    setIsLoading(true);
+    const data = await getPhotosByColor(colorChoice);
+    setPhotos(data);
+    setIsLoading(false);
   };
 
   const handleChooseGallery = () => {
@@ -44,7 +51,7 @@ const ReorderPhotosPage: React.FC = () => {
                   {
                     [colorShapeStyles[`shape--${color}`]]: true,
                     [colorSquareStyles["square--has-grey-borders"]]: true,
-                  }
+                  },
                 )}
               />
             </button>
@@ -52,15 +59,21 @@ const ReorderPhotosPage: React.FC = () => {
         </Grid>
       </Modal>
 
-      <GalleryPhotosProvider color={userColorChoice!}>
+      <>
         <aside>
           <NavBarDashboard />
         </aside>
-        <DragAndDropPanel
-          currentColor={userColorChoice}
-          handleChooseGallery={handleChooseGallery}
-        />
-      </GalleryPhotosProvider>
+
+        {!showModal && (
+          <DragAndDropPanel
+            currentColor={userColorChoice}
+            photos={photos}
+            setPhotos={setPhotos}
+            isLoading={isLoading}
+            handleChooseGallery={handleChooseGallery}
+          />
+        )}
+      </>
     </>
   );
 };

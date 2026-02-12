@@ -9,7 +9,6 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { usePhotosByColorData } from "@/app/contexts/GalleryPhotosContext";
 import Image from "next/image";
 import { Button, Flex, Grid, Text } from "@radix-ui/themes";
 import dragAndDropPanelStyles from "./DragAndDropPanel.module.scss";
@@ -17,11 +16,14 @@ import classNames from "classnames";
 import { Photo } from "@prisma/client";
 import { Color } from "@prisma/client";
 import { areArraysEqual } from "@/app/helpers/arrayHelper";
-import axios from "axios";
 import Spinner from "@/app/components/Spinner";
+import { reorderPhotos } from "@/app/dashboard/actions/reorderPhotos";
 
 interface DragAndDropPanelProps {
   currentColor: Color | null;
+  photos: Photo[];
+  setPhotos: React.Dispatch<React.SetStateAction<Photo[]>>;
+  isLoading: boolean;
   handleChooseGallery: () => void;
 }
 
@@ -59,12 +61,13 @@ const PhotoItem = ({
 
 const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
   currentColor,
+  photos,
+  setPhotos,
+  isLoading,
   handleChooseGallery,
 }) => {
-  const photosByColor = usePhotosByColorData();
-  const [sortedPhotos, setSortedPhotos] = useState<Photo[] | undefined>(
-    photosByColor
-  );
+  const [initialPhotos, setInitialPhotos] = useState<Photo[]>(photos);
+  const [sortedPhotos, setSortedPhotos] = useState<Photo[]>(photos);
   const [isValidatingNewOrder, setIsValidatingNewOrder] = useState(false);
   const [newOrderValidationMessage, setNewOrderValidationMessage] =
     useState("");
@@ -74,52 +77,54 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
   }, [currentColor]);
 
   useEffect(() => {
-    setSortedPhotos(photosByColor);
-  }, [photosByColor]);
+    setInitialPhotos(photos);
+    setSortedPhotos(photos);
+    setNewOrderValidationMessage("");
+  }, [photos]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (active.id !== over?.id) {
-      const activeIndex = sortedPhotos!.findIndex(
-        (photo) => photo.id === active.id
-      );
-      const overIndex = sortedPhotos!.findIndex(
-        (photo) => photo.id === over?.id
-      );
+    if (!over || !sortedPhotos) return;
+    if (active.id === over.id) return;
 
-      setSortedPhotos((prevPhotos) =>
-        arrayMove(prevPhotos!, activeIndex, overIndex)
-      );
-    }
+    const activeIndex = sortedPhotos.findIndex(
+      (photo) => photo.id === active.id,
+    );
+    const overIndex = sortedPhotos.findIndex((photo) => photo.id === over.id);
+
+    setSortedPhotos((prev) => arrayMove(prev!, activeIndex, overIndex));
   };
 
   const validateNewOrder = async () => {
     try {
       setIsValidatingNewOrder(true);
 
-      await axios.post("/api/photos/update-order", {
-        photoOrders: sortedPhotos?.map((photo, index) => ({
+      await reorderPhotos(
+        sortedPhotos.map((photo, index) => ({
           id: photo.id,
           order: index,
         })),
-      });
+      );
 
-      setIsValidatingNewOrder(false);
+      setInitialPhotos(sortedPhotos);
       setNewOrderValidationMessage("New order applied successfully!");
     } catch (error) {
       console.error(error);
+      setNewOrderValidationMessage("An unexpected error occurred.");
+    } finally {
       setIsValidatingNewOrder(false);
-      setNewOrderValidationMessage("An unexpected error occured.");
     }
   };
 
-  return photosByColor && sortedPhotos && currentColor ? (
+  if (!currentColor) return null;
+
+  return initialPhotos && sortedPhotos ? (
     <Flex direction="column" gap="5">
       <h1
         className={classNames(
           "text-3xl font-bold",
-          dragAndDropPanelStyles.thumbnailsFrame__title
+          dragAndDropPanelStyles.thumbnailsFrame__title,
         )}
       >
         Reorder the{" "}
@@ -133,7 +138,7 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
         {(sortedPhotos.length === 0 && (
           <span className="mr-5">There are no photos in this gallery</span>
         )) ||
-          (!areArraysEqual(photosByColor, sortedPhotos) &&
+          (!areArraysEqual(initialPhotos, sortedPhotos) &&
             !newOrderValidationMessage && (
               <Button
                 onClick={validateNewOrder}
@@ -154,7 +159,14 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
           </Text>
         )}
       </Flex>
-      {sortedPhotos.length > 0 ? (
+
+      {isLoading && (
+        <Flex justify="center" align="center">
+          <Spinner />
+        </Flex>
+      )}
+
+      {!isLoading && sortedPhotos?.length > 0 ? (
         <DndContext
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}
@@ -172,7 +184,7 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
                     [dragAndDropPanelStyles[
                       `thumbnailsFrame__pageTitle--${currentColor}`
                     ]]: currentColor,
-                  }
+                  },
                 )}
               >
                 Page 1
@@ -188,7 +200,7 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
                     [dragAndDropPanelStyles[
                       `thumbnailsFrame__page--has-${currentColor}-border-bottom`
                     ]]: sortedPhotos.length <= 16 || sortedPhotos.length > 28,
-                  }
+                  },
                 )}
               >
                 {sortedPhotos.slice(0, 32).map((photo) => (
@@ -208,7 +220,7 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
                       [dragAndDropPanelStyles[
                         `thumbnailsFrame__pageSeparator--${currentColor}`
                       ]]: currentColor,
-                    }
+                    },
                   )}
                 >
                   Page 2
@@ -231,7 +243,7 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
                       [dragAndDropPanelStyles[
                         "thumbnailsFrame__bottomSecondPage--has-3-lines"
                       ]]: sortedPhotos.length > 24 && sortedPhotos.length <= 28,
-                    }
+                    },
                   )}
                 ></div>
               )}
