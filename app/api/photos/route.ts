@@ -39,6 +39,7 @@ export async function POST(request: NextRequest) {
     })
 
     revalidatePath(`/gallery/${body.color}`);
+    revalidatePath('/gallery/recent')
 
     return NextResponse.json(newPhoto, { status: 201 })
 }

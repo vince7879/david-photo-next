@@ -37,6 +37,7 @@ export async function PATCH(request: NextRequest, { params }: PhotoPageProps) {
     });
 
     revalidatePath(`/gallery/${oldColor}`);
+    revalidatePath('/gallery/recent')
 
     return NextResponse.json(updatedPhoto);
   }
@@ -84,6 +85,7 @@ export async function PATCH(request: NextRequest, { params }: PhotoPageProps) {
 
     revalidatePath(`/gallery/${oldColor}`);
     revalidatePath(`/gallery/${newColor}`);
+    revalidatePath('/gallery/recent')
 
     return NextResponse.json(updatedPhoto);
   } catch (error: any) {
@@ -144,6 +146,7 @@ export async function DELETE(request: NextRequest, { params }: PhotoPageProps) {
     }
 
     revalidatePath(`/gallery/${color}`);
+    revalidatePath('/gallery/recent')
 
     return NextResponse.json(
       { success: "Photo deleted successfully." },

@@ -13,7 +13,7 @@ const cormorantFont = Cormorant_Upright({
 export interface PaginationProps {
   color: Photo["color"];
   handlePagination: () => void;
-  pageNumber: 1 | 2
+  pageNumber: 1 | 2 | 3;
 }
 
 const Pagination: React.FC<PaginationProps> = ({
@@ -26,10 +26,10 @@ const Pagination: React.FC<PaginationProps> = ({
       className={classNames(
         paginationStyles.paginationNumber,
         {
-          [paginationStyles["paginationNumber--is-black"]]:
-            color === "white",
+          [paginationStyles["paginationNumber--is-black"]]: color === "white",
+          [paginationStyles["paginationNumber--is-three"]]: pageNumber === 3,
         },
-        cormorantFont.className
+        cormorantFont.className,
       )}
       onClick={handlePagination}
     >

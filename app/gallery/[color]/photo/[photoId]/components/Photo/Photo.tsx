@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { Skeleton, Text } from "@radix-ui/themes";
-import { rgbDataURL } from "@/app/constants/placeholderImage";
+import { rgbDataURL } from "@/app/constants";
 import {
   useGalleryPhotosIsLoadingSelector,
   usePhotosByColorData,

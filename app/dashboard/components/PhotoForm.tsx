@@ -14,6 +14,7 @@ import imageCompression from "browser-image-compression";
 import { Color, Photo } from "@prisma/client";
 import NavBarDashboard from "@/app/components/NavBar/NavBarDashboard/NavBarDashboard";
 import DeletePhotoButton from "./DeletePhotoButton";
+import { MONTHS } from "@/app/constants";
 
 type PhotoFormData = z.infer<typeof createPhotoSchema>;
 
@@ -22,22 +23,6 @@ interface PhotoFormProps {
 }
 
 const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
-  // @todo: to move to a global constant file
-  const months = [
-    "janvier",
-    "février",
-    "mars",
-    "avril",
-    "mai",
-    "juin",
-    "juillet",
-    "août",
-    "septembre",
-    "octobre",
-    "novembre",
-    "décembre",
-  ];
-
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null | undefined>(
     null
@@ -254,7 +239,7 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
                     >
                       <Select.Trigger placeholder="Month" />
                       <Select.Content position="popper">
-                        {months.map((month) => (
+                        {MONTHS.map((month) => (
                           <Select.Item key={month} value={month}>
                             {month}
                           </Select.Item>

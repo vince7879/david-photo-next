@@ -16,4 +16,9 @@
     border-bottom-color: var(--black);
     color: var(--black);
   }
+
+  &--is-three {
+    font-size: 40px;
+    line-height: 1.45;
+  }
 }
