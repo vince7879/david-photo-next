@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/client";
 import { PhotoPageProps } from "@/app/gallery/[color]/photo/[photoId]/page";
 import cloudinary from "@/lib/cloudinary";
+import { revalidatePath } from "next/cache";
 
 export async function GET(request: NextRequest, { params }: PhotoPageProps) {
   const { color, photoId } = params;
@@ -34,6 +35,8 @@ export async function PATCH(request: NextRequest, { params }: PhotoPageProps) {
         updatedAt: new Date(), // to guarantee that field is updated
       },
     });
+
+    revalidatePath(`/gallery/${oldColor}`);
 
     return NextResponse.json(updatedPhoto);
   }
@@ -78,6 +81,9 @@ export async function PATCH(request: NextRequest, { params }: PhotoPageProps) {
         },
       });
     });
+
+    revalidatePath(`/gallery/${oldColor}`);
+    revalidatePath(`/gallery/${newColor}`);
 
     return NextResponse.json(updatedPhoto);
   } catch (error: any) {
@@ -136,6 +142,8 @@ export async function DELETE(request: NextRequest, { params }: PhotoPageProps) {
       console.error("⚠️ Cloudinary deletion failed:", cloudinaryError);
       // we do not block the response: the DB is already consistent
     }
+
+    revalidatePath(`/gallery/${color}`);
 
     return NextResponse.json(
       { success: "Photo deleted successfully." },

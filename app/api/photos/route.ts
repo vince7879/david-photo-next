@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/client";
 import { createPhotoSchema } from "../../validationSchemas";
+import { revalidatePath } from "next/cache";
 
 export async function POST(request: NextRequest) {
     const body = await request.json()
@@ -36,6 +37,8 @@ export async function POST(request: NextRequest) {
             order: existingPhotosCount, // 0-based index
         }
     })
+
+    revalidatePath(`/gallery/${body.color}`);
 
     return NextResponse.json(newPhoto, { status: 201 })
 }

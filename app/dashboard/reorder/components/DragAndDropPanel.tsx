@@ -105,6 +105,7 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
           id: photo.id,
           order: index,
         })),
+        currentColor!,
       );
 
       setInitialPhotos(sortedPhotos);
