@@ -27,15 +27,16 @@ const Gallery: React.FC<GalleryProps> = ({
 }) => {
   const router = useRouter();
   const pathname = usePathname();
-  const [page, setPage] = useState<1 | 2 | 3>(isRecent ? 1 : 2);
+  const hasThreePages = isRecent || currentColor === "blackwhite";
+  const [page, setPage] = useState<1 | 2 | 3>(hasThreePages ? 1 : 2);
 
   const handlePagination = () => {
-    if (isRecent) {
+    if (hasThreePages) {
       if (page === 1) setPage(2);
       else if (page === 2) setPage(3);
       else setPage(1);
     } else {
-      // for the galleries of colors, toggle between page 1 and page 2
+      // for the other galleries of colors, toggle between page 1 and page 2
       setPage(page === 2 ? 1 : 2);
     }
   };
@@ -50,12 +51,12 @@ const Gallery: React.FC<GalleryProps> = ({
   };
 
   const getPaginatedPhotos = () => {
-    if (isRecent) {
+    if (hasThreePages) {
       if (page === 1) return photos.slice(0, 16);
       if (page === 2) return photos.slice(16, 32);
       return photos.slice(32, 48);
     } else {
-      // for the galleries of colors, page 1 shows the 16 oldest photos, page 2 shows the 16 most recent photos
+      // for the other galleries of colors, page 1 shows the 16 oldest photos, page 2 shows the 16 most recent photos
       return photos.slice(page === 2 ? 0 : 16, page === 2 ? 16 : 32);
     }
   };
@@ -64,7 +65,8 @@ const Gallery: React.FC<GalleryProps> = ({
 
   // Calculate the page number to display in the pagination component
   const getDisplayPageNumber = (): 1 | 2 | 3 => {
-    if (isRecent) {
+    if (hasThreePages) {
+      // display the next page number
       if (page === 1) return 2;
       if (page === 2) return 3;
       return 1;
@@ -74,7 +76,7 @@ const Gallery: React.FC<GalleryProps> = ({
 
   // Determinate whether to show the pagination component or not
   const shouldShowPagination = () => {
-    if (isRecent) return photos.length > 16;
+    if (isRecent || currentColor === "blackwhite") return photos.length > 16;
     return photos.length > 16 && currentColor;
   };
 
