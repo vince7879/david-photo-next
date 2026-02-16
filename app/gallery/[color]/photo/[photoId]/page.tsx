@@ -1,6 +1,3 @@
-// import Photo from "./components/Photo/Photo";
-// import NavBarPhoto from "@/app/components/NavBar/NavBarPhoto/NavBarPhoto";
-import { GalleryPhotosProvider } from "@/app/contexts/GalleryPhotosContext";
 import prisma from "@/prisma/client";
 import { Photo as TPhoto } from "@prisma/client";
 import PhotoPageClient from "./PhotoPageClient";
@@ -21,15 +18,7 @@ const PhotoPage: React.FC<PhotoPageProps> = async ({
   });
 
   return (
-    <GalleryPhotosProvider
-      color={color}
-      initialPhotosByColor={photos}
-    >
-      <PhotoPageClient
-        color={color}
-        initialPhotoId={photoId}
-      />
-    </GalleryPhotosProvider>
+    <PhotoPageClient initialPhotoId={photoId} photos={photos} color={color} />
   );
 };
 

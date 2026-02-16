@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Skeleton, Text } from "@radix-ui/themes";
 import { rgbDataURL } from "@/app/constants";
-import photoStyles from "./Photo.module.scss";
+import photoStyles from "@/app/gallery/[color]/photo/[photoId]/components/Photo/Photo.module.scss";
 import classNames from "classnames";
 import { Photo as TPhoto } from "@prisma/client";
 
@@ -14,7 +14,8 @@ interface PhotoProps {
 const Photo: React.FC<PhotoProps> = ({ photos, id }) => {
   const [imageIsLoading, setImageIsLoading] = useState(true);
 
-  const photo = photos.find((photo) => photo.publicId === id);
+  const photo = photos?.find((photo) => photo.publicId === id);
+
   const legend: string = `${
     photo && photo.place.charAt(0).toUpperCase() + photo.place.slice(1)
   }, ${photo?.month.toLowerCase()} ${photo?.year}`;

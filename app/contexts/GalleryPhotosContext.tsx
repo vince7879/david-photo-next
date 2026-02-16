@@ -17,7 +17,6 @@ const GalleryPhotosContext = createContext<IContext>({
 
 interface IProvider {
   color?: Color;
-  isRecent?: boolean;
   initialPhotosByColor?: Photo[];
 }
 
@@ -26,14 +25,12 @@ export const GalleryPhotosProvider = ({
   children,
 }: PropsWithChildren<IProvider>) => {
   const [photosByColor] = useState(initialPhotosByColor);
-  // const [photosRecent, setPhotosRecent] = useState<Photo[]>();
   const [isLoading] = useState(false);
 
   return (
     <GalleryPhotosContext.Provider
       value={{
         photosByColor,
-        // photosRecent,
         isLoading,
       }}
     >
@@ -44,7 +41,5 @@ export const GalleryPhotosProvider = ({
 
 export const usePhotosByColorData = () =>
   useContextSelector(GalleryPhotosContext, (state) => state.photosByColor);
-// export const usePhotosRecentData = () =>
-//   useContextSelector(GalleryPhotosContext, (state) => state.photosRecent);
 export const useGalleryPhotosIsLoadingSelector = () =>
   useContextSelector(GalleryPhotosContext, (state) => state.isLoading);

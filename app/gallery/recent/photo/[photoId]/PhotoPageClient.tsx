@@ -6,13 +6,11 @@ import NavBarPhoto from "@/app/components/NavBar/NavBarPhoto/NavBarPhoto";
 import { Photo as TPhoto } from "@prisma/client";
 
 interface Props {
-  color: TPhoto["color"];
   initialPhotoId: TPhoto["publicId"];
   photos: TPhoto[];
 }
 
 export default function PhotoPageClient({
-  color,
   initialPhotoId,
   photos,
 }: Props) {
@@ -21,18 +19,13 @@ export default function PhotoPageClient({
 
   const handleClickedButton = (futureId: TPhoto["publicId"]) => {
     setPhotoPublicId(futureId);
-    window.history.pushState(
-      null,
-      "",
-      `/gallery/${color}/photo/${futureId}`
-    );
+    window.history.pushState(null, "", `/gallery/recent/photo/${futureId}`);
   };
 
   return (
     <>
       <aside>
         <NavBarPhoto
-          currentColor={color}
           currentPhotoId={photoPublicId}
           onButtonClicked={handleClickedButton}
           photos={photos}

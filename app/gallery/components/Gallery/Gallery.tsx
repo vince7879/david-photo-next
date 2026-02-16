@@ -46,7 +46,7 @@ const Gallery: React.FC<GalleryProps> = ({
   ) => {
     if (pathname.includes("edit"))
       router.push(`/gallery/${color}/photo/${id}/edit`);
-    else router.push(`/gallery/${color}/photo/${id}`);
+    else router.push(`/gallery/${isRecent ? "recent/" : color}/photo/${id}`);
   };
 
   const getPaginatedPhotos = () => {

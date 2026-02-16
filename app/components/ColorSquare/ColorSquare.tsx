@@ -6,7 +6,7 @@ import colorSquareStyles from "@/app/components/ColorSquare/ColorSquare.module.s
 import { Color } from "@prisma/client";
 
 export interface ColorSquareProps {
-  color: Color;
+  color: Color | "recent";
   buttonVariant?: 'previous' | 'next';
   isDisabled?: boolean
   className?: string

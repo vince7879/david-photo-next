@@ -76,6 +76,26 @@
     background-color: var(--orange);
   }
 
+  &--recent {
+    // background: linear-gradient(315deg, var(--red), transparent 70.71%),
+    // linear-gradient(45deg, var(--green), transparent 70.71%),
+    // linear-gradient(135deg, var(--blue), transparent 70.71%),
+    // linear-gradient(270deg, var(--yellow), transparent 70.71%);
+
+    background: conic-gradient(from 40deg,
+        var(--black),
+        var(--brown),
+        var(--yellow),
+        var(--orange),
+        var(--red),
+        var(--purple),
+        var(--green),
+        var(--blue),
+        var(--grey),
+        var(--white),
+        var(--black));
+  }
+
   &--top-middle {
     left: 23%;
     height: 10%;
