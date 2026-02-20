@@ -37,21 +37,24 @@ export async function PATCH(request: NextRequest, { params }: PhotoPageProps) {
     });
 
     revalidatePath(`/gallery/${oldColor}`);
-    revalidatePath('/gallery/recent')
+    revalidatePath("/gallery/recent");
 
     return NextResponse.json(updatedPhoto);
   }
 
   try {
     const updatedPhoto = await prisma.$transaction(async (tx) => {
-      // 1. Check if the target gallery doesn't reach the max nb of photos (32)
+      // Determine the limit by gallery color
+      const maxPhotos = newColor === "blackwhite" ? 48 : 32;
+
+      // 1. Check if the target gallery doesn't reach the max nb of photos
       const targetGalleryCount = await tx.photo.count({
         where: { color: newColor },
       });
 
-      if (targetGalleryCount >= 32) {
+      if (targetGalleryCount >= maxPhotos) {
         throw new Error(
-          "This gallery already has the maximum number of photos (32).",
+          `This gallery already has the maximum number of photos (${maxPhotos}).`,
         );
       }
 
@@ -85,7 +88,7 @@ export async function PATCH(request: NextRequest, { params }: PhotoPageProps) {
 
     revalidatePath(`/gallery/${oldColor}`);
     revalidatePath(`/gallery/${newColor}`);
-    revalidatePath('/gallery/recent')
+    revalidatePath("/gallery/recent");
 
     return NextResponse.json(updatedPhoto);
   } catch (error: any) {
@@ -146,7 +149,7 @@ export async function DELETE(request: NextRequest, { params }: PhotoPageProps) {
     }
 
     revalidatePath(`/gallery/${color}`);
-    revalidatePath('/gallery/recent')
+    revalidatePath("/gallery/recent");
 
     return NextResponse.json(
       { success: "Photo deleted successfully." },

@@ -66,13 +66,17 @@ $gallery-codes: (
         background-color: #{$color-hex-code};
 
         @if ($gallery-color =='black') {
-          background-color: var(--border-size) solid var(--white);
+          background-color: var(--white);
         }
 
         @if ($gallery-color =='white' or $gallery-color =='black' or $gallery-color =='blackwhite' or $gallery-color =='yellow') {
           color: #000;
         }
       }
+    }
+
+    &--is-third {
+      top: 1113px;
     }
   }
 
@@ -101,6 +105,42 @@ $gallery-codes: (
     width: 100%;
     height: var(--inner-length);
     bottom: -460px;
+
+    @each $gallery-color, $color-hex-code in $gallery-codes {
+      &--#{$gallery-color} {
+        border-left: var(--border-size) solid #{$color-hex-code};
+        border-right: var(--border-size) solid #{$color-hex-code};
+        border-bottom: var(--border-size) solid #{$color-hex-code};
+
+        @if ($gallery-color =='black') {
+          border-left: var(--border-size) solid var(--white);
+          border-right: var(--border-size) solid var(--white);
+          border-bottom: var(--border-size) solid var(--white);
+        }
+      }
+    }
+
+    &--has-1-line {
+      bottom: -440px;
+      height: 440px;
+    }
+
+    &--has-2-lines {
+      bottom: -302.5px;
+      height: 302.5px;
+    }
+
+    &--has-3-lines {
+      bottom: -165px;
+      height: 165px;
+    }
+  }
+
+  &__bottomThirdPage {
+    position: absolute;
+    width: 100%;
+    height: var(--inner-length);
+    bottom: -860px;
 
     @each $gallery-color, $color-hex-code in $gallery-codes {
       &--#{$gallery-color} {

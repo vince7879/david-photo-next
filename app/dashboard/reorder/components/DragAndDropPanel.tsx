@@ -72,6 +72,10 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
   const [newOrderValidationMessage, setNewOrderValidationMessage] =
     useState("");
 
+  // determine if the current gallery has 3 pages
+  const hasThreePages = currentColor === "blackwhite";
+  const maxPhotos = hasThreePages ? 48 : 32;
+
   useEffect(() => {
     setNewOrderValidationMessage("");
   }, [currentColor]);
@@ -173,7 +177,7 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
           onDragEnd={handleDragEnd}
         >
           <SortableContext
-            items={sortedPhotos.slice(0, 32)}
+            items={sortedPhotos.slice(0, maxPhotos)}
             strategy={rectSortingStrategy}
           >
             <div className={dragAndDropPanelStyles.thumbnailsFrame}>
@@ -200,11 +204,11 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
                     ]]: currentColor,
                     [dragAndDropPanelStyles[
                       `thumbnailsFrame__page--has-${currentColor}-border-bottom`
-                    ]]: sortedPhotos.length <= 16 || sortedPhotos.length > 28,
+                    ]]: sortedPhotos.length <= 16 || sortedPhotos.length > 28 && sortedPhotos.length <= 32 || sortedPhotos.length > 44, // add bottom border to page 1 if there is no page 2 or if there is a page 2 but no page 3
                   },
                 )}
               >
-                {sortedPhotos.slice(0, 32).map((photo) => (
+                {sortedPhotos.slice(0, maxPhotos).map((photo) => (
                   <PhotoItem
                     key={photo.id}
                     id={photo.id}
@@ -212,6 +216,8 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
                   />
                 ))}
               </Grid>
+
+              {/* PAGE 2 */}
               {sortedPhotos.length > 16 && (
                 <h3
                   className={classNames(
@@ -247,6 +253,55 @@ const DragAndDropPanel: React.FC<DragAndDropPanelProps> = ({
                     },
                   )}
                 ></div>
+              )}
+
+              {/* PAGE 3 */}
+              {hasThreePages && sortedPhotos.length > 32 && (
+                <>
+                  <h3
+                    className={classNames(
+                      dragAndDropPanelStyles.thumbnailsFrame__pageSeparator,
+                      dragAndDropPanelStyles.thumbnailsFrame__pageTitle,
+                      dragAndDropPanelStyles[
+                        "thumbnailsFrame__pageSeparator--is-third"
+                      ],
+                      {
+                        [dragAndDropPanelStyles[
+                          `thumbnailsFrame__pageSeparator--${currentColor}`
+                        ]]: currentColor,
+                      },
+                    )}
+                  >
+                    Page 3
+                  </h3>
+                  {sortedPhotos.length <= 44 && (
+                    <div
+                      className={classNames(
+                        dragAndDropPanelStyles.thumbnailsFrame__bottomThirdPage,
+                        {
+                          [dragAndDropPanelStyles[
+                            `thumbnailsFrame__bottomThirdPage--${currentColor}`
+                          ]]: currentColor,
+                          [dragAndDropPanelStyles[
+                            "thumbnailsFrame__bottomThirdPage--has-1-line"
+                          ]]:
+                            sortedPhotos.length > 32 &&
+                            sortedPhotos.length <= 36,
+                          [dragAndDropPanelStyles[
+                            "thumbnailsFrame__bottomThirdPage--has-2-lines"
+                          ]]:
+                            sortedPhotos.length > 36 &&
+                            sortedPhotos.length <= 40,
+                          [dragAndDropPanelStyles[
+                            "thumbnailsFrame__bottomThirdPage--has-3-lines"
+                          ]]:
+                            sortedPhotos.length > 40 &&
+                            sortedPhotos.length <= 44,
+                        },
+                      )}
+                    ></div>
+                  )}
+                </>
               )}
             </div>
           </SortableContext>

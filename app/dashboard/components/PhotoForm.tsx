@@ -98,65 +98,95 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
     setIsSubmitting(true);
 
     try {
-      const formData = new FormData();
-      let photoUploadResult;
-
-      if (!photoData) {
-        if (photo) {
-          formData.append("file", photo);
-          formData.append("upload_preset", "x2bx90y9");
-        }
-
-        const cloudinaryResponse = await axios.post(
-          "https://api.cloudinary.com/v1_1/dnaf0ui17/image/upload",
-          formData
+      if (photoData) {
+        // edit photo mode - no upload to Cloudinary
+        await axios.patch(
+          `/api/photos/${photoData.color}/photo/${photoData.publicId}`,
+          data
         );
-
-        if (cloudinaryResponse.status !== 200) {
-          throw new Error("Photo upload failed");
-        }
-
-        photoUploadResult = await cloudinaryResponse.data;
-      }
-
-      // Add the uploaded photo and its format to the payload
-      const payload = {
-        ...data,
-        ...(!photoData && {
-          photoUrl: photoUploadResult.secure_url,
-          publicId: photoUploadResult.public_id,
-          isPortrait,
-        }),
-      };
-      try {
-        if (photoData) {
-          await axios.patch(
-            `/api/photos/${photoData.color}/photo/${photoData.publicId}`,
-            data
-          );
-        } else {
-          await axios.post("/api/photos", payload);
-        }
 
         reset();
         setPhotoPreview(null);
-        setSubmitMessage(
-          `photo ${photoData ? "updated" : "added"} successfully!`
-        );
+        setSubmitMessage("photo updated successfully!");
         setJustSubmitted(true);
-      } catch (error: any) {
-        if (error.response) {
-          const serverMessage =
-            error.response.data?.error || "Unexpected server error.";
-          setSubmitMessage(serverMessage);
-        } else {
-          setSubmitMessage("Network error. Please try again.");
+      } else {
+        // add new photo mode - check the limit first, then upload
+        if (!photo) {
+          setSubmitMessage("Please select a photo to upload.");
+          setJustSubmitted(true);
+          return;
+        }
+
+        // 1. check if we can add a photo (without uploading yet)
+        const checkPayload = {
+          place: data.place,
+          month: data.month,
+          year: data.year,
+          color: data.color,
+          // send temporary values to pass validation
+          photoUrl: "temp",
+          publicId: "temp",
+          isPortrait: isPortrait,
+        };
+
+        try {
+          // test if we can add (it will fail with the limit but won't create anything)
+          const checkResponse = await axios.post(
+            "/api/photos/check-limit",
+            { color: data.color }
+          );
+
+          // If the check passes, we can proceed with the upload
+          const formData = new FormData();
+          formData.append("file", photo);
+          formData.append("upload_preset", "x2bx90y9");
+
+          const cloudinaryResponse = await axios.post(
+            `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`,
+            formData
+          );
+
+          if (cloudinaryResponse.status !== 200) {
+            throw new Error("Photo upload failed");
+          }
+
+          const photoUploadResult = cloudinaryResponse.data;
+
+          // create the photo with the real data
+          const payload = {
+            ...data,
+            photoUrl: photoUploadResult.secure_url,
+            publicId: photoUploadResult.public_id,
+            isPortrait,
+          };
+
+          await axios.post("/api/photos", payload);
+
+          reset();
+          setPhotoPreview(null);
+          setPhoto(null);
+          setSubmitMessage("photo added successfully!");
+          setJustSubmitted(true);
+        } catch (error: any) {
+          if (error.response) {
+            const serverMessage =
+              error.response.data?.error ||
+              error.response.data?.message ||
+              "Unexpected server error.";
+            setSubmitMessage(serverMessage);
+            setJustSubmitted(true);
+          } else {
+            setSubmitMessage("Network error. Please try again.");
+            setJustSubmitted(true);
+          }
         }
       }
     } catch (error: unknown) {
-      const axiosError = error as AxiosError<{ message?: string }>;
+      const axiosError = error as AxiosError<{ message?: string; error?: string }>;
       const message =
-        axiosError.response?.data.message || "An unexpected error occurred.";
+        axiosError.response?.data?.error ||
+        axiosError.response?.data?.message ||
+        "An unexpected error occurred.";
 
       setSubmitMessage(message);
       setJustSubmitted(true);
@@ -195,7 +225,7 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
               {...register("place")}
             />
             <ErrorMessage>{errors.place?.message}</ErrorMessage>
-            {/* rework spacing between selects and submit btn */}
+            {/* @todo: rework spacing between selects and submit btn */}
             <Flex>
               <div className="mr-5">
                 <Controller
