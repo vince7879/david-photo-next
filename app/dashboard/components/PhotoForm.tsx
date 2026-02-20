@@ -142,7 +142,7 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
           formData.append("upload_preset", "x2bx90y9");
 
           const cloudinaryResponse = await axios.post(
-            `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`,
+            `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
             formData
           );
 
