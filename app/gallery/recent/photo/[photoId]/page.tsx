@@ -13,14 +13,12 @@ export interface RecentPhotoPageProps {
 const RecentPhotoPage: React.FC<RecentPhotoPageProps> = async ({
   params: { photoId },
 }) => {
-  // fetch all photos, sort them by date desc and keep the 48 most recent ones
+  // fetch all photos, sort them by date desc and keep the 64 most recent ones
   const allPhotos = await prisma.photo.findMany();
   const sortedPhotos = allPhotos.sort(sortPhotosByDateDesc);
-  const photos = sortedPhotos.slice(0, 48);
+  const photos = sortedPhotos.slice(0, 64);
 
-  return (
-    <PhotoPageClient initialPhotoId={photoId} photos={photos} />
-  );
+  return <PhotoPageClient initialPhotoId={photoId} photos={photos} />;
 };
 
 export default RecentPhotoPage;

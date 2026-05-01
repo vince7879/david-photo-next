@@ -13,8 +13,8 @@ const RecentGalleryPage = async () => {
   // sort photos from most recent to least recent
   const sortedPhotos = allPhotos.sort(sortPhotosByDateDesc);
 
-  // take the 48 most recent photos
-  const photos = sortedPhotos.slice(0, 48);
+  // take the 80 most recent photos (up to 5 pages of 16 photos)
+  const photos = sortedPhotos.slice(0, 80);
 
   return (
     <>
