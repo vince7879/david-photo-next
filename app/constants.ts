@@ -58,19 +58,28 @@ export const getMonthNumber = (month: string): number => {
 };
 
 /**
- * compare two photos by their date (year and month) in descending order (most recent first)
+ * compare two photos by their date in descending order (most recent first)
+ * Uses shotAt (precise EXIF date) when available, falls back to year/month
  * @param a - first photo to compare
  * @param b - second photo to compare
- * @returns negaltive number if a is more recent than b, positive number if b is more recent than a, or 0 if they have the same date
+ * @returns negative number if a is more recent than b, positive number if b is more recent than a, or 0 if they have the same date and shotAt
  */
 export const sortPhotosByDateDesc = (
-  a: { year: string; month: string },
-  b: { year: string; month: string },
+  a: { year: string; month: string; shotAt?: Date | null },
+  b: { year: string; month: string; shotAt?: Date | null },
 ): number => {
   // compare by year first
   const yearDiff = parseInt(b.year) - parseInt(a.year);
   if (yearDiff !== 0) return yearDiff;
 
   // if same year, compare by month
-  return getMonthNumber(b.month) - getMonthNumber(a.month);
+  const monthDiff = getMonthNumber(b.month) - getMonthNumber(a.month);
+  if (monthDiff !== 0) return monthDiff;
+
+  // if same month, use precise shotAt if available
+  if (a.shotAt && b.shotAt) {
+    return new Date(b.shotAt).getTime() - new Date(a.shotAt).getTime();
+  }
+
+  return 0;
 };

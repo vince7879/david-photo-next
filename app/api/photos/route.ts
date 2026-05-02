@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
         publicId: body.publicId,
         isPortrait: body.isPortrait,
         order: existingPhotosCount, // 0-based index
+        shotAt: body.shotAt ? new Date(body.shotAt) : null,
       },
     });
 

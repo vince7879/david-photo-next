@@ -11,6 +11,7 @@ import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
 import Image from "next/image";
 import imageCompression from "browser-image-compression";
+import exifr from "exifr";
 import { Color, Photo } from "@prisma/client";
 import NavBarDashboard from "@/app/components/NavBar/NavBarDashboard/NavBarDashboard";
 import DeletePhotoButton from "./DeletePhotoButton";
@@ -28,6 +29,7 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
     null
   );
   const [isPortrait, setIsPortrait] = useState<boolean | null>(null);
+  const [shotAt, setShotAt] = useState<string | null>(null);
 
   const {
     register,
@@ -54,6 +56,18 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
     const photoFile = event.target.files?.[0];
 
     if (photoFile) {
+      // Read EXIF before compression (compression may strip metadata)
+      try {
+        const exifData = await exifr.parse(photoFile, ["DateTimeOriginal"]);
+        console.log("🚀 ~ handleFileSelect ~ exifData:", exifData)
+        if (exifData?.DateTimeOriginal instanceof Date) {
+          setShotAt(exifData.DateTimeOriginal.toISOString());
+        } else {
+          setShotAt(null);
+        }
+      } catch {
+        setShotAt(null);
+      }
       // console.log("originalFile instanceof Blob", photoFile instanceof Blob); // true
       // console.log(`originalFile size ${photoFile.size / 1024 / 1024} MB`);
 
@@ -158,6 +172,7 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
             photoUrl: photoUploadResult.secure_url,
             publicId: photoUploadResult.public_id,
             isPortrait,
+            ...(shotAt && { shotAt }),
           };
 
           await axios.post("/api/photos", payload);
@@ -165,6 +180,7 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
           reset();
           setPhotoPreview(null);
           setPhoto(null);
+          setShotAt(null);
           setSubmitMessage("photo added successfully!");
           setJustSubmitted(true);
         } catch (error: any) {
