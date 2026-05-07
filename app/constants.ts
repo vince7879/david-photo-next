@@ -1,5 +1,9 @@
 import { Photo } from "@prisma/client";
 
+// Recent gallery limits
+export const RECENT_GALLERY_MAX_PAGES = 5;
+export const RECENT_GALLERY_MAX_PHOTOS = RECENT_GALLERY_MAX_PAGES * 16;
+
 // Pixel GIF code adapted from https://stackoverflow.com/a/33919020/266535
 const keyStr =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";

@@ -1,6 +1,6 @@
 import Gallery from "@/app/gallery/components/Gallery/Gallery";
 import prisma from "@/prisma/client";
-import { sortPhotosByDateDesc } from "@/app/constants";
+import { sortPhotosByDateDesc, RECENT_GALLERY_MAX_PHOTOS } from "@/app/constants";
 import NavBarGallery from "@/app/components/NavBar/NavBarGallery/NavBarGallery";
 
 export const dynamic = "force-static";
@@ -13,8 +13,8 @@ const RecentGalleryPage = async () => {
   // sort photos from most recent to least recent
   const sortedPhotos = allPhotos.sort(sortPhotosByDateDesc);
 
-  // take the 80 most recent photos (up to 5 pages of 16 photos)
-  const photos = sortedPhotos.slice(0, 80);
+  // take the most recent photos (up to RECENT_GALLERY_MAX_PHOTOS)
+  const photos = sortedPhotos.slice(0, RECENT_GALLERY_MAX_PHOTOS);
 
   return (
     <>

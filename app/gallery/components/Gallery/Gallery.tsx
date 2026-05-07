@@ -9,6 +9,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { Photo } from "@prisma/client";
 import { DashboardIcon } from "@radix-ui/react-icons";
 import Pagination, { PaginationProps } from "../Pagination/Pagination";
+import { RECENT_GALLERY_MAX_PAGES } from "@/app/constants";
 
 interface GalleryProps {
   currentColor?: Photo["color"];
@@ -30,7 +31,7 @@ const Gallery: React.FC<GalleryProps> = ({
   
   // Determine the number of pages for this gallery
   const getMaxPages = () => {
-    if (isRecent) return Math.min(5, Math.ceil(photos.length / 16)) || 1; // Recent: up to 5 pages based on photo count
+    if (isRecent) return Math.min(RECENT_GALLERY_MAX_PAGES, Math.ceil(photos.length / 16)) || 1;
     if (currentColor === "blackwhite" && photos.length > 32) return 3;
     if (photos.length > 16) return 2; // Any gallery with 17+ photos has at least 2 pages
     return 1; // Single page
