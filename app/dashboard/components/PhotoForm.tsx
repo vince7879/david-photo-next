@@ -72,8 +72,8 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
       // console.log(`originalFile size ${photoFile.size / 1024 / 1024} MB`);
 
       const options = {
-        maxSizeMB: 7,
-        maxWidthOrHeight: 2500,
+        maxSizeMB: 10,
+        alwaysKeepResolution: true,
       };
       try {
         compressedPhoto = await imageCompression(photoFile, options);
