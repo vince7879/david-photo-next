@@ -3,8 +3,14 @@ import prisma from "@/prisma/client";
 import { PhotoPageProps } from "@/app/gallery/[color]/photo/[photoId]/page";
 import cloudinary from "@/lib/cloudinary";
 import { revalidatePath } from "next/cache";
+import { auth } from "@/auth";
 
 export async function GET(request: NextRequest, { params }: PhotoPageProps) {
+  const session = await auth();
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const { color, photoId } = params;
   const photo = await prisma.photo.findUnique({
     where: { publicId: photoId, color },
@@ -14,6 +20,11 @@ export async function GET(request: NextRequest, { params }: PhotoPageProps) {
 }
 
 export async function PATCH(request: NextRequest, { params }: PhotoPageProps) {
+  const session = await auth();
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const { color: oldColor, photoId } = params;
   const body = await request.json();
   const newColor = body.color;
@@ -105,6 +116,11 @@ export async function PATCH(request: NextRequest, { params }: PhotoPageProps) {
 }
 
 export async function DELETE(request: NextRequest, { params }: PhotoPageProps) {
+  const session = await auth();
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const { color, photoId } = params;
 
   try {

@@ -1,49 +1,28 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 
-const BLOCKED_BOTS = [
-  "gptbot",       // OpenAI
-  "ahrefs",
-  "semrush",
-  "mj12",
-  "dotbot",
-  "petalbot",
-  "bytespider",
-];
+const BLOCKED_BOTS = ["gptbot", "ahrefs", "semrush", "mj12", "dotbot", "petalbot", "bytespider"];
 
 export const config = {
-  matcher: [
-    "/", 
-    "/gallery/:path*",
-    "/dashboard/:path+",
-    "/(.*)/edit(.*)",
-  ],
+  matcher: ["/", "/gallery/:path*", "/dashboard/:path*", "/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
+  const isProtected = pathname.startsWith("/dashboard") || pathname.includes("/edit");
 
-  // 🔐 Zones protégées → NextAuth gère
-  if (
-    pathname.startsWith("/dashboard") ||
-    pathname.includes("/edit")
-  ) {
+  // 🔐 Protection stricte des zones d'administration
+  if (isProtected) {
+    if (!req.auth) {
+      return NextResponse.redirect(new URL("/unauthorized", req.nextUrl));
+    }
     return NextResponse.next();
   }
 
-  // 🌍 Pages publiques
-  if (pathname === "/" || pathname.startsWith("/gallery")) {
-    const ua = (req.headers.get("user-agent") ?? "").toLowerCase();
-
-    // Autoriser Google (SEO)
-    if (ua.includes("googlebot")) {
-      return NextResponse.next();
-    }
-
-    // ❌ Bloquer GPTBot & autres crawlers agressifs
-    if (BLOCKED_BOTS.some((bot) => ua.includes(bot))) {
-      return new Response(null, { status: 403 });
-    }
+  // 🤖 Filtrage robots sur les routes publiques
+  const ua = (req.headers.get("user-agent") ?? "").toLowerCase();
+  if (!ua.includes("googlebot") && BLOCKED_BOTS.some((bot) => ua.includes(bot))) {
+    return new Response("Forbidden", { status: 403 });
   }
 
   return NextResponse.next();
