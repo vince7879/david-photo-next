@@ -15,9 +15,9 @@ const Photo: React.FC<PhotoProps> = ({ photos, id }) => {
   const [imageIsLoading, setImageIsLoading] = useState(true);
 
   const photo = photos.find((photo) => photo.publicId === id);
-  const legend: string = `${
-    photo && photo.place.charAt(0).toUpperCase() + photo.place.slice(1)
-  }, ${photo?.month.toLowerCase()} ${photo?.year}`;
+  const legend: string = photo
+    ? `${photo.place.charAt(0).toUpperCase() + photo.place.slice(1)}, ${photo.month.toLowerCase()} ${photo.year}`
+    : "";
 
   return !photo ? (
     <Skeleton

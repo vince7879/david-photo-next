@@ -18,13 +18,21 @@ const NavBarPhoto: React.FC<NavBarPhotoProps> = ({
   currentColor,
   currentPhotoId,
 }) => {
-  const galleryIds = photos?.map((photo) => photo.publicId);
-  const currentPhotoIndexInGallery = galleryIds?.findIndex(
-    (id: string) => id === currentPhotoId,
+  const currentPhotoIndexInGallery = photos?.findIndex(
+    (photo) => photo.publicId === currentPhotoId,
   );
+  const hasValidIndex =
+    currentPhotoIndexInGallery !== undefined && currentPhotoIndexInGallery >= 0;
 
   // for the recent gallery, we use a neutral color (black)
   const displayColor = currentColor || "black";
+
+  const arrowSuffix =
+    currentColor === "white"
+      ? "-black"
+      : currentColor === "blackwhite"
+      ? "-blackwhite"
+      : "-white";
 
   return (
     <nav className={`flex flex-col items-center ${navBarStyles.navBar}`}>
@@ -43,44 +51,46 @@ const NavBarPhoto: React.FC<NavBarPhotoProps> = ({
       {<ColorSquare color={currentColor || "recent"} />}
 
       {/* 2 arrows to switch from one to another photo of the current gallery */}
-      {photos &&
-        galleryIds &&
-        (currentPhotoIndexInGallery || currentPhotoIndexInGallery === 0) && (
-          <>
-            <ColorSquare
-              color={displayColor}
-              buttonVariant="previous"
-              isDisabled={currentPhotoIndexInGallery === 0}
-              className="mt-3.5"
-              onButtonClicked={() =>
-                onButtonClicked(photos[currentPhotoIndexInGallery - 1].publicId)
+      {photos && hasValidIndex && (
+        <>
+          <ColorSquare
+            color={displayColor}
+            buttonVariant="previous"
+            isDisabled={currentPhotoIndexInGallery === 0}
+            className="mt-3.5"
+            onButtonClicked={() => {
+              if (currentPhotoIndexInGallery > 0) {
+                onButtonClicked(photos[currentPhotoIndexInGallery - 1].publicId);
               }
-            >
-              <Image
-                width="48"
-                height="48"
-                src={`/images/left-arrow${currentColor === 'white' && '-black' || currentColor === 'blackwhite' && '-blackwhite' || '-white'}.svg`}
-                alt="previous photo"
-              />
-            </ColorSquare>
-            <ColorSquare
-              color={displayColor}
-              buttonVariant="next"
-              isDisabled={currentPhotoIndexInGallery === galleryIds.length - 1}
-              className="mt-3.5"
-              onButtonClicked={() =>
-                onButtonClicked(photos[currentPhotoIndexInGallery + 1].publicId)
+            }}
+          >
+            <Image
+              width="48"
+              height="48"
+              src={`/images/left-arrow${arrowSuffix}.svg`}
+              alt="previous photo"
+            />
+          </ColorSquare>
+          <ColorSquare
+            color={displayColor}
+            buttonVariant="next"
+            isDisabled={currentPhotoIndexInGallery === photos.length - 1}
+            className="mt-3.5"
+            onButtonClicked={() => {
+              if (currentPhotoIndexInGallery < photos.length - 1) {
+                onButtonClicked(photos[currentPhotoIndexInGallery + 1].publicId);
               }
-            >
-              <Image
-                width="48"
-                height="48"
-                src={`/images/right-arrow${currentColor === 'white' && '-black' || currentColor === 'blackwhite' && '-blackwhite' || '-white'}.svg`}
-                alt="next photo"
-              />
-            </ColorSquare>
-          </>
-        )}
+            }}
+          >
+            <Image
+              width="48"
+              height="48"
+              src={`/images/right-arrow${arrowSuffix}.svg`}
+              alt="next photo"
+            />
+          </ColorSquare>
+        </>
+      )}
     </nav>
   );
 };
