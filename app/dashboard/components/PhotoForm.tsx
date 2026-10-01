@@ -5,7 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import axios, { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createPhotoSchema } from "@/app/validationSchemas";
+import { photoFormSchema } from "@/app/validationSchemas";
 import { z } from "zod";
 import ErrorMessage from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
@@ -17,7 +17,7 @@ import NavBarDashboard from "@/app/components/NavBar/NavBarDashboard/NavBarDashb
 import DeletePhotoButton from "./DeletePhotoButton";
 import { MONTHS } from "@/app/constants";
 
-type PhotoFormData = z.infer<typeof createPhotoSchema>;
+type PhotoFormData = z.infer<typeof photoFormSchema>;
 
 interface PhotoFormProps {
   photoData?: Photo;
@@ -39,7 +39,7 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
     watch,
     reset,
   } = useForm<PhotoFormData>({
-    resolver: zodResolver(createPhotoSchema),
+    resolver: zodResolver(photoFormSchema),
   });
   const [submitMessage, setSubmitMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -132,17 +132,6 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
         }
 
         // 1. check if we can add a photo (without uploading yet)
-        const checkPayload = {
-          place: data.place,
-          month: data.month,
-          year: data.year,
-          color: data.color,
-          // send temporary values to pass validation
-          photoUrl: "temp",
-          publicId: "temp",
-          isPortrait: isPortrait,
-        };
-
         try {
           // test if we can add (it will fail with the limit but won't create anything)
           const checkResponse = await axios.post(
@@ -151,12 +140,18 @@ const PhotoForm: React.FC<PhotoFormProps> = ({ photoData }) => {
           );
 
           // If the check passes, we can proceed with the upload
+          const { data: uploadSignature } = await axios.post(
+            "/api/uploads/signature"
+          );
+
           const formData = new FormData();
           formData.append("file", photo);
-          formData.append("upload_preset", "x2bx90y9");
+          formData.append("api_key", uploadSignature.apiKey);
+          formData.append("timestamp", String(uploadSignature.timestamp));
+          formData.append("signature", uploadSignature.signature);
 
           const cloudinaryResponse = await axios.post(
-            `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+            `https://api.cloudinary.com/v1_1/${uploadSignature.cloudName}/image/upload`,
             formData
           );
 

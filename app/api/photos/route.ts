@@ -16,14 +16,16 @@ export async function POST(request: NextRequest) {
   if (!validation.success)
     return NextResponse.json(validation.error.format(), { status: 400 });
 
+  const photo = validation.data;
+
   try {
     // Determine the limit by gallery color
-    const maxPhotos = body.color === "blackwhite" ? 48 : 32;
+    const maxPhotos = photo.color === "blackwhite" ? 48 : 32;
 
     // count the photos of the current gallery
     const existingPhotosCount = await prisma.photo.count({
       where: {
-        color: body.color,
+        color: photo.color,
       },
     });
 
@@ -36,19 +38,19 @@ export async function POST(request: NextRequest) {
 
     const newPhoto = await prisma.photo.create({
       data: {
-        place: body.place,
-        month: body.month,
-        year: body.year,
-        color: body.color,
-        photoUrl: body.photoUrl,
-        publicId: body.publicId,
-        isPortrait: body.isPortrait,
+        place: photo.place,
+        month: photo.month,
+        year: photo.year,
+        color: photo.color,
+        photoUrl: photo.photoUrl,
+        publicId: photo.publicId,
+        isPortrait: photo.isPortrait,
         order: existingPhotosCount, // 0-based index
-        shotAt: body.shotAt ? new Date(body.shotAt) : null,
+        shotAt: photo.shotAt ? new Date(photo.shotAt) : null,
       },
     });
 
-    revalidatePath(`/gallery/${body.color}`);
+    revalidatePath(`/gallery/${photo.color}`);
     revalidatePath("/gallery/recent");
 
     return NextResponse.json(newPhoto, { status: 201 });
